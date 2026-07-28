@@ -21,6 +21,9 @@
   - Sarcasm Detection: the fuller 5–6 model comparison (28,503 headlines, MiniLM 92%→50% OOD collapse, McNemar's p<0.001).
 - Every outbound project/post link must be a real URL captured during research (no invented URLs).
 - "Download CV" button points to `/CV_Laud_Asante.pdf`, which does not exist yet (only a `.docx` was found in Downloads). This is a known, flagged gap — do not fabricate a PDF or silently drop the button.
+- Future-facing additions (requested after the original spec, added directly to `lib/content.ts` in a follow-up commit — see that file for the authoritative shape):
+  - The user will keep publishing new projects to GitHub over time. The Projects section must not just render the current 5 cards — it must also end with a trailing "more on GitHub" card/link (`moreProjects` export: `{ label, url }`) so newly published repos are discoverable without a code change each time. Promoting a repo to a full case-study card (adding it to the `projects` array) remains a manual, deliberate step — `moreProjects` is the low-effort fallback in between.
+  - LinkedIn (and potentially other social links, flagged the same way if/when confirmed) is not yet fully polished. `LinkCta` (the type now used for `hero.ctas` and `contact.footerLinks`) carries an optional `status?: "in-progress"` field. Any CTA/footer-link component must render a small, non-apologetic "Updating" badge next to a link when `status === "in-progress"` — not an error state, just a soft indicator — rather than presenting an unfinished profile as complete.
 
 ---
 
@@ -257,6 +260,15 @@ export interface Stat {
   label: string;
 }
 
+export interface LinkCta {
+  label: string;
+  href: string;
+  primary?: boolean;
+  /** Set when the destination itself (profile/page) is still being polished —
+   * renders a small "Updating" badge instead of implying it's finished. */
+  status?: "in-progress";
+}
+
 export const hero = {
   kicker: "Laud Asante · Data Science & AI",
   headline: "Forecasting, optimisation and deep learning, ",
@@ -265,9 +277,9 @@ export const hero = {
   ctas: [
     { label: "Download CV ↓", href: "/CV_Laud_Asante.pdf", primary: true },
     { label: "GitHub ↗", href: "https://github.com/Laud1ens" },
-    { label: "LinkedIn ↗", href: "https://www.linkedin.com/in/laud-asante-938382103/" },
+    { label: "LinkedIn ↗", href: "https://www.linkedin.com/in/laud-asante-938382103/", status: "in-progress" },
     { label: "Hugging Face ↗", href: "https://huggingface.co/laud1ens" },
-  ],
+  ] as LinkCta[],
   stats: [
     { value: 0.745, decimals: 3, label: "SARIMA R², county forecast" },
     { value: 98.5, suffix: "%", label: "Predictive maintenance accuracy" },
@@ -408,6 +420,18 @@ export const projects: Project[] = [
   },
 ];
 
+/**
+ * More projects get pushed to GitHub over time. Rather than hard-coding a
+ * count or a "latest" list that needs a code change per upload, this points
+ * to the live profile so newly published repos are discoverable immediately;
+ * promote a repo to a full `projects` entry above when it's ready for a
+ * proper case-study card.
+ */
+export const moreProjects = {
+  label: "More projects, added as they're published",
+  url: "https://github.com/Laud1ens?tab=repositories",
+};
+
 export interface WritingPost {
   title: string;
   teaser: string;
@@ -493,11 +517,13 @@ export const contact = {
   footerLinks: [
     { label: "Download CV", href: "/CV_Laud_Asante.pdf" },
     { label: "GitHub", href: "https://github.com/Laud1ens" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/laud-asante-938382103/" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/laud-asante-938382103/", status: "in-progress" },
     { label: "Hugging Face", href: "https://huggingface.co/laud1ens" },
-  ],
+  ] as LinkCta[],
 };
 ```
+
+> **Note:** this code block was amended after Task 4 originally shipped, to add `LinkCta`/`status` and `moreProjects` per a follow-up request (accommodate future GitHub project uploads; flag not-yet-polished social links). The actual `lib/content.ts` already has this — see commit `e4a36d3`. Tasks 6, 9, and 12 below have been updated to consume it.
 
 - [ ] **Step 2: Verify it type-checks**
 
@@ -660,6 +686,7 @@ import Image from "next/image";
 import { hero } from "@/lib/content";
 import { AnimatedStat } from "@/components/animated-stat";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export function Hero() {
   return (
@@ -673,22 +700,31 @@ export function Hero() {
           <em className="text-rust not-italic md:italic">{hero.headlineEmphasis}</em>.
         </h1>
         <p className="mb-8 max-w-xl text-lg leading-relaxed text-brown">{hero.lede}</p>
-        <div className="mb-10 flex flex-wrap gap-3">
+        <div className="mb-10 flex flex-wrap items-center gap-3">
           {hero.ctas.map((cta) => (
-            <Button
-              key={cta.href}
-              asChild
-              variant={cta.primary ? "default" : "outline"}
-              className={
-                cta.primary
-                  ? "bg-brown-deep text-paper hover:bg-brown"
-                  : "border-brown-deep/30 text-brown-deep hover:bg-cream"
-              }
-            >
-              <a href={cta.href} target="_blank" rel="noopener noreferrer">
-                {cta.label}
-              </a>
-            </Button>
+            <span key={cta.href} className="inline-flex items-center gap-2">
+              <Button
+                asChild
+                variant={cta.primary ? "default" : "outline"}
+                className={
+                  cta.primary
+                    ? "bg-brown-deep text-paper hover:bg-brown"
+                    : "border-brown-deep/30 text-brown-deep hover:bg-cream"
+                }
+              >
+                <a href={cta.href} target="_blank" rel="noopener noreferrer">
+                  {cta.label}
+                </a>
+              </Button>
+              {cta.status === "in-progress" && (
+                <Badge
+                  variant="secondary"
+                  className="border border-taupe/40 bg-cream font-label text-[11px] font-medium uppercase tracking-wide text-brown"
+                >
+                  Updating
+                </Badge>
+              )}
+            </span>
           ))}
         </div>
         <div className="grid grid-cols-3 gap-4 border-t border-brown-deep/10 pt-6">
@@ -707,7 +743,7 @@ export function Hero() {
 
 - [ ] **Step 3: Render and verify**
 
-In `app/page.tsx`, replace the placeholder `<main>` content with `<Hero />` (import it), keeping `<SiteHeader />` above it. Run `npm run dev -- --port 4300 &`, open `http://localhost:4300`, confirm: headline, lede, 4 CTA buttons (Download CV, GitHub, LinkedIn, Hugging Face — GitHub/LinkedIn/HF open in new tabs), 3 stats that count up on load, and the headshot image render. Stop the dev server.
+In `app/page.tsx`, replace the placeholder `<main>` content with `<Hero />` (import it), keeping `<SiteHeader />` above it. Run `npm run dev -- --port 4300 &`, open `http://localhost:4300`, confirm: headline, lede, 4 CTA buttons (Download CV, GitHub, LinkedIn, Hugging Face — GitHub/LinkedIn/HF open in new tabs), 3 stats that count up on load, and the headshot image render. Also confirm the LinkedIn button shows a small "Updating" badge next to it (from `hero.ctas`'s `status: "in-progress"`) and none of the other three CTAs show a badge. Stop the dev server.
 
 - [ ] **Step 4: Commit**
 
@@ -845,7 +881,7 @@ git commit -m "Add experience timeline section"
 - Create: `components/sections/projects.tsx`
 
 **Interfaces:**
-- Consumes: `projects: Project[]` from `@/lib/content`.
+- Consumes: `projects: Project[]` and `moreProjects: { label: string; url: string }` from `@/lib/content`.
 - Produces: `Projects` component, added to `app/page.tsx` in Task 13.
 
 - [ ] **Step 1: Write the section**
@@ -853,7 +889,7 @@ git commit -m "Add experience timeline section"
 Create `components/sections/projects.tsx`:
 
 ```tsx
-import { projects } from "@/lib/content";
+import { projects, moreProjects } from "@/lib/content";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -905,6 +941,16 @@ export function Projects() {
             </CardContent>
           </Card>
         ))}
+        <a
+          href={moreProjects.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center rounded-xl border border-dashed border-brown-deep/25 p-6 text-center transition-colors hover:border-rust/50 hover:bg-cream"
+        >
+          <span className="font-label text-sm font-medium text-brown">
+            {moreProjects.label} ↗
+          </span>
+        </a>
       </div>
     </section>
   );
@@ -913,7 +959,7 @@ export function Projects() {
 
 - [ ] **Step 2: Render and verify**
 
-Add `<Projects />` to `app/page.tsx` below `<Experience />`. Run the dev server, confirm all 5 project cards render (Dissertation, NexaHeat FX, Sarcasm Detection, Road Safety, Manufacturing Analytics), and that the Sarcasm Detection and Manufacturing Analytics cards each show a working "View repo ↗" link. Stop the dev server.
+Add `<Projects />` to `app/page.tsx` below `<Experience />`. Run the dev server, confirm all 5 project cards render (Dissertation, NexaHeat FX, Sarcasm Detection, Road Safety, Manufacturing Analytics), that the Sarcasm Detection and Manufacturing Analytics cards each show a working "View repo ↗" link, and that a 6th tile — a dashed-border "More projects, added as they're published ↗" tile linking to the GitHub repos tab — renders after the 5 project cards. Stop the dev server.
 
 - [ ] **Step 3: Commit**
 
@@ -1090,17 +1136,18 @@ export function Contact() {
             </div>
           ))}
         </div>
-        <div className="mt-12 flex flex-wrap gap-6 border-t border-paper/10 pt-6 font-label text-sm">
+        <div className="mt-12 flex flex-wrap items-center gap-6 border-t border-paper/10 pt-6 font-label text-sm">
           {contact.footerLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-rust"
-            >
-              {link.label}
-            </a>
+            <span key={link.href} className="inline-flex items-center gap-1.5">
+              <a href={link.href} target="_blank" rel="noopener noreferrer" className="hover:text-rust">
+                {link.label}
+              </a>
+              {link.status === "in-progress" && (
+                <span className="rounded-full border border-taupe/40 px-2 py-0.5 text-[10px] uppercase tracking-wide text-taupe">
+                  Updating
+                </span>
+              )}
+            </span>
           ))}
         </div>
         <div className="mt-6 flex flex-wrap justify-between gap-2 font-mono text-xs text-taupe">
@@ -1115,7 +1162,7 @@ export function Contact() {
 
 - [ ] **Step 2: Render and verify**
 
-Add `<Contact />` to `app/page.tsx` below `<Skills />`. Run the dev server, confirm the email/phone/WhatsApp links work (open mail client / tel / WhatsApp web respectively when clicked) and all 4 footer links render. Stop the dev server.
+Add `<Contact />` to `app/page.tsx` below `<Skills />`. Run the dev server, confirm the email/phone/WhatsApp links work (open mail client / tel / WhatsApp web respectively when clicked), all 4 footer links render, and the LinkedIn footer link shows a small "Updating" pill next to it while the other three don't. Stop the dev server.
 
 - [ ] **Step 3: Commit**
 
@@ -1236,6 +1283,7 @@ Check, in order:
 3. All 6 nav links (`#about`, `#experience`, `#projects`, `#writing`, `#skills`, `#contact`) scroll to the correct section when clicked.
 4. Resize to a mobile width (~375px): hero grid stacks to one column, nav links collapse (hidden per `md:flex` — acceptable for this pass since no mobile menu was in scope), project/writing cards stack to one column, contact grid stacks.
 5. All external links (GitHub, LinkedIn, Hugging Face, project repos, writing post links, WhatsApp) have `target="_blank"` and correct hrefs — spot check 3–4 by hovering and reading the status-bar URL.
+6. The "Updating" badge appears next to LinkedIn in both the Hero CTA row and the Contact footer links, and next to nothing else. The Projects section ends with a 6th, visually distinct dashed-border tile linking to the GitHub repos tab.
 
 Stop the dev server once verified.
 
@@ -1256,4 +1304,13 @@ No code change — just confirm in the final summary to the user that `/CV_Laud_
 
 - **Spec coverage:** Architecture (Task 1–2), headshot asset (Task 3), content model incl. all resolved discrepancies (Task 4), every section named in the spec — Hero, About, Experience (new), Projects (5 cards incl. new 5th), Writing (new), Skills, Contact (Tasks 5–12), scroll-reveal + final verification (Task 13). CV PDF gap explicitly flagged (Task 13, Step 6) rather than silently dropped.
 - **Placeholder scan:** No TBD/TODO; every step has complete code or an exact command with expected output.
-- **Type consistency:** `Stat`, `ExperienceEntry`, `Project`, `WritingPost`, `SkillGroup` interfaces defined once in Task 4 and consumed by matching field names (`value`/`suffix`/`decimals`/`label`, `role`/`company`/`period`/`location`/`description`, `tag`/`title`/`role`/`what`/`outcome`/`impact`/`repoUrl`, `title`/`teaser`/`impressions`/`url`, `title`/`skills`) in every later task — verified no renamed fields between definition and usage.
+- **Type consistency:** `Stat`, `LinkCta`, `ExperienceEntry`, `Project`, `WritingPost`, `SkillGroup` interfaces defined once in Task 4 and consumed by matching field names (`value`/`suffix`/`decimals`/`label`, `label`/`href`/`primary`/`status`, `role`/`company`/`period`/`location`/`description`, `tag`/`title`/`role`/`what`/`outcome`/`impact`/`repoUrl`, `title`/`teaser`/`impressions`/`url`, `title`/`skills`) in every later task — verified no renamed fields between definition and usage.
+
+## Amendment (post-Task-5, applied while Task 6 was in progress)
+
+Two follow-up requirements arrived after the plan's original approval, addressed directly in `lib/content.ts` (commit `e4a36d3`, on top of Task 4's original commit) and folded into Tasks 4, 6, 9, and 12 above so the not-yet-built tasks (9, 12 at the time) stay consistent with the already-shipped content model:
+
+1. **Future GitHub projects.** The user will keep publishing new projects. `projects` was always the extensible source (append an entry, no markup change needed) — added `moreProjects` (`{ label, url }`, pointing at the GitHub repos tab) as the always-current fallback for repos not yet promoted to a full case-study card. Task 9's Projects grid now renders a 6th, visually distinct dashed-border tile linking to it.
+2. **Unpolished social links.** LinkedIn specifically (the only one confirmed so far) is not fully optimised yet. Added `LinkCta.status?: "in-progress"` to `hero.ctas` and `contact.footerLinks`, set on the LinkedIn entry in both. Tasks 6 and 12 now render a small, non-apologetic "Updating" badge/pill next to any CTA or footer link with that status. If other social links are confirmed as under-construction later, set the same field — no component changes needed.
+
+Tasks 1, 2, 3, 5 are unaffected (no link/project rendering in their scope). Tasks 7, 8, 10, 11, 13 are unaffected in content but Task 13's final visual-verification checklist gained one line (item 6) to confirm the badge and trailing tile both render correctly in the composed page.
