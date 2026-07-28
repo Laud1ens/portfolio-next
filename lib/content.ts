@@ -9,8 +9,8 @@ export interface LinkCta {
   label: string;
   href: string;
   primary?: boolean;
-  /** Set when the destination itself (profile/page) is still being polished —
-   * renders a small "Updating" badge instead of implying it's finished. */
+  /** Set when the destination itself (profile/page) is still being polished.
+   * Renders a small "Updating" badge instead of implying it's finished. */
   status?: "in-progress";
 }
 
@@ -110,6 +110,18 @@ export const experience: ExperienceEntry[] = [
   },
 ];
 
+export type ProjectVisual =
+  | {
+      type: "comparisonBar";
+      headlineStat?: { value: number; decimals?: number; suffix?: string; label: string };
+      primary: { label: string; value: number };
+      secondary: { label: string; value: number };
+      primaryCaption: string;
+      valueDecimals?: number;
+    }
+  | { type: "flow"; nodes: [string, string, string]; captions?: [string?, string?, string?] }
+  | { type: "radialStat"; value: number; suffix?: string; decimals?: number; label: string };
+
 export interface Project {
   tag: string;
   title: string;
@@ -118,6 +130,7 @@ export interface Project {
   outcome: string;
   impact: string;
   repoUrl?: string;
+  visual?: ProjectVisual;
 }
 
 export const projects: Project[] = [
@@ -126,8 +139,15 @@ export const projects: Project[] = [
     title: "US County-Level Forecasting: SARIMA vs XGBoost vs GAT-LSTM",
     role: "Aug 2025 – Nov 2026 · Supervised by Dr. Tongxin Chen",
     what: "Building a four-notebook, seven-model forecasting pipeline (SARIMA, SARIMAX, XGBoost, LSTM, GAT-LSTM variants) benchmarked across 3,219 US counties, engineering mobility-graph features from weekly flow data.",
-    outcome: "Current headline result: SARIMA leads with R²=0.745, outperforming the more complex GAT-LSTM architectures so far — an evidence-based case in progress for choosing the simpler model that actually generalises.",
+    outcome: "Current headline result: SARIMA leads with R²=0.745, outperforming the more complex GAT-LSTM architectures so far, an evidence-based case in progress for choosing the simpler model that actually generalises.",
     impact: "a documented, evidence-based case for choosing the simpler model that actually works over the more sophisticated one that doesn't, useful to any Data Science or ML Team Lead deciding where to spend model-complexity budget.",
+    visual: {
+      type: "comparisonBar",
+      headlineStat: { value: 0.745, decimals: 3, label: "SARIMA R², current leader" },
+      primary: { label: "XGBoost", value: 0.593 },
+      secondary: { label: "GAT-LSTM", value: -0.007 },
+      primaryCaption: "Earlier benchmark (R²)",
+    },
   },
   {
     tag: "Personal Project · Full-Stack AI Product",
@@ -136,15 +156,27 @@ export const projects: Project[] = [
     what: "Designed and built a browser-based FX intelligence tool from scratch, integrating live market data (Twelve Data) with three LLM providers (Claude, Groq, Gemini) to generate real-time market commentary and signals.",
     outcome: "Shipped a working end-to-end product independently, now scoping a market-prediction layer starting with XGBoost and progressing toward a Temporal Fusion Transformer.",
     impact: "proof I can ship a working, multi-API AI product end-to-end, not just a notebook, relevant to Engineering & Product Managers hiring for applied AI roles.",
+    visual: {
+      type: "flow",
+      nodes: ["Market Data", "Multi-LLM Signal Engine", "Live Commentary"],
+      captions: ["Twelve Data", "Claude · Groq · Gemini", "& Signals"],
+    },
   },
   {
     tag: "NLP · Module 771767",
     title: "Sarcasm Detection: Deployment-Ready Model Comparison",
     role: "Coursework, MSc AI & Data Science",
-    what: "Compared six approaches — Naive Bayes, Logistic Regression, LSTM, GRU, and a fine-tuned/frozen MiniLM Transformer — for detecting sarcasm across 28,503 headlines, then stress-tested every model on 24 out-of-domain sentences.",
-    outcome: "Fine-tuned MiniLM reached 92% in-domain accuracy (0.974 AUC-ROC) but collapsed to 50% (chance level) out-of-domain — identical to the weaker LSTM baseline, confirmed via McNemar's test (p<0.001).",
-    impact: "shows the statistical rigor to prove a model actually won — and the honesty to show where it breaks — the check a Data Science Manager looks for before trusting a model claim in production.",
+    what: "Compared six approaches (Naive Bayes, Logistic Regression, LSTM, GRU, and a fine-tuned/frozen MiniLM Transformer) for detecting sarcasm across 28,503 headlines, then stress-tested every model on 24 out-of-domain sentences.",
+    outcome: "Fine-tuned MiniLM reached 92% in-domain accuracy (0.974 AUC-ROC) but collapsed to 50% (chance level) out-of-domain, identical to the weaker LSTM baseline and confirmed via McNemar's test (p<0.001).",
+    impact: "shows the statistical rigor to prove a model actually won, and the honesty to show where it breaks: the check a Data Science Manager looks for before trusting a model claim in production.",
     repoUrl: "https://github.com/Laud1ens/Sarcasm-detection-using-AI---NLP-Project",
+    visual: {
+      type: "comparisonBar",
+      primary: { label: "In-domain", value: 92 },
+      secondary: { label: "Out-of-domain", value: 50 },
+      primaryCaption: "MiniLM accuracy (%)",
+      valueDecimals: 0,
+    },
   },
   {
     tag: "Big Data · Module 771762",
@@ -153,6 +185,10 @@ export const projects: Project[] = [
     what: "Mined UK STATS19 road accident records alongside SNAP Facebook ego-network graph data to surface geographic and social patterns at scale.",
     outcome: "Delivered a combined structured-data and network-graph analysis, built to High Distinction standard.",
     impact: "turns large, messy public safety datasets into geography-specific, decision-ready patterns, useful to Local Authority & Transport Analytics Managers.",
+    visual: {
+      type: "flow",
+      nodes: ["STATS19 Road Records", "SNAP Facebook Networks", "Geo + Social Insights"],
+    },
   },
   {
     tag: "Applied ML · Personal Project",
@@ -162,6 +198,13 @@ export const projects: Project[] = [
     outcome: "Reached 98.5% accuracy on held-out machine-failure prediction, validated against imbalance-aware metrics rather than accuracy alone.",
     impact: "gives a Plant or Operations Manager a decision-ready early-warning signal for machine failure, cutting unplanned downtime risk.",
     repoUrl: "https://github.com/Laud1ens/Manufacturing-Analytics-Predictive-Maintenance-AI4I2020",
+    visual: {
+      type: "radialStat",
+      value: 98.5,
+      suffix: "%",
+      decimals: 1,
+      label: "Predictive maintenance accuracy",
+    },
   },
 ];
 
@@ -186,13 +229,13 @@ export interface WritingPost {
 
 export const writing: WritingPost[] = [
   {
-    title: "Gradient Descent finally clicked for me — and here is what changed.",
-    teaser: "For a long time, I genuinely struggled to grasp what gradient descent actually was — and more importantly, where it fit in the bigger picture of AI.",
+    title: "Gradient Descent finally clicked for me - and here is what changed.",
+    teaser: "For a long time, I genuinely struggled to grasp what gradient descent actually was, and more importantly, where it fit in the bigger picture of AI.",
     impressions: 312,
     url: "https://www.linkedin.com/feed/update/urn:li:activity:7463036844625088512/",
   },
   {
-    title: "Sarcasm Detection Using 5 AI Models — Non-Technical Read",
+    title: "Sarcasm Detection Using 5 AI Models - Non-Technical Read",
     teaser: "I built an AI detector that spots sarcasm. I later found out it was cheating. I tried 'fixing it', and the AI got better at cheating.",
     impressions: 264,
     url: "https://www.linkedin.com/feed/update/urn:li:activity:7484577805104578560/",
