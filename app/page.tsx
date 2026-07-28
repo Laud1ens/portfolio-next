@@ -6,19 +6,30 @@ import { Projects } from "@/components/sections/projects";
 import { Writing } from "@/components/sections/writing";
 import { Skills } from "@/components/sections/skills";
 import { Contact } from "@/components/sections/contact";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 export default function Home() {
   return (
     <>
       <SiteHeader />
-      <main>
+      <div className="mx-auto max-w-[1080px] px-8">
         <Hero />
-        <About />
-        <Experience />
-        <Projects />
-        <Writing />
-        <Skills />
-      </main>
+        <ScrollReveal>
+          <About />
+        </ScrollReveal>
+        <ScrollReveal>
+          <Experience />
+        </ScrollReveal>
+        <ScrollReveal>
+          <Projects />
+        </ScrollReveal>
+        <ScrollReveal>
+          <Writing />
+        </ScrollReveal>
+        <ScrollReveal>
+          <Skills />
+        </ScrollReveal>
+      </div>
       <Contact />
     </>
   );
