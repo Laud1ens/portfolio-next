@@ -4,7 +4,7 @@ export function About() {
   return (
     <section id="about" className="py-20">
       <div className="mb-10">
-        <span className="font-label text-sm uppercase tracking-wider text-rust">// About</span>
+        <span className="font-label text-sm uppercase tracking-wider text-rust">{"// About"}</span>
         <h2 className="mt-2 font-display text-3xl font-semibold text-brown-deep md:text-4xl">
           Signal, not noise
         </h2>

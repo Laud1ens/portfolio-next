@@ -774,7 +774,7 @@ export function About() {
   return (
     <section id="about" className="py-20">
       <div className="mb-10">
-        <span className="font-label text-sm uppercase tracking-wider text-rust">// About</span>
+        <span className="font-label text-sm uppercase tracking-wider text-rust">{"// About"}</span>
         <h2 className="mt-2 font-display text-3xl font-semibold text-brown-deep md:text-4xl">
           Signal, not noise
         </h2>
@@ -835,7 +835,7 @@ export function Experience() {
   return (
     <section id="experience" className="py-20">
       <div className="mb-10">
-        <span className="font-label text-sm uppercase tracking-wider text-rust">// Experience</span>
+        <span className="font-label text-sm uppercase tracking-wider text-rust">{"// Experience"}</span>
         <h2 className="mt-2 font-display text-3xl font-semibold text-brown-deep md:text-4xl">
           Six years reading patterns under pressure, before I had the statistics to name them
         </h2>
@@ -897,7 +897,7 @@ export function Projects() {
   return (
     <section id="projects" className="py-20">
       <div className="mb-10">
-        <span className="font-label text-sm uppercase tracking-wider text-rust">// Projects</span>
+        <span className="font-label text-sm uppercase tracking-wider text-rust">{"// Projects"}</span>
         <h2 className="mt-2 font-display text-3xl font-semibold text-brown-deep md:text-4xl">
           Work that ends in a decision, not just a metric
         </h2>
@@ -991,7 +991,7 @@ export function Writing() {
   return (
     <section id="writing" className="py-20">
       <div className="mb-10">
-        <span className="font-label text-sm uppercase tracking-wider text-rust">// Writing</span>
+        <span className="font-label text-sm uppercase tracking-wider text-rust">{"// Writing"}</span>
         <h2 className="mt-2 font-display text-3xl font-semibold text-brown-deep md:text-4xl">
           Translating the technical for people who don&apos;t need the maths
         </h2>
@@ -1055,7 +1055,7 @@ export function Skills() {
   return (
     <section id="skills" className="py-20">
       <div className="mb-10">
-        <span className="font-label text-sm uppercase tracking-wider text-rust">// Toolkit</span>
+        <span className="font-label text-sm uppercase tracking-wider text-rust">{"// Toolkit"}</span>
         <h2 className="mt-2 font-display text-3xl font-semibold text-brown-deep md:text-4xl">
           Skills &amp; tools
         </h2>

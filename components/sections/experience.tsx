@@ -5,7 +5,7 @@ export function Experience() {
   return (
     <section id="experience" className="py-20">
       <div className="mb-10">
-        <span className="font-label text-sm uppercase tracking-wider text-rust">// Experience</span>
+        <span className="font-label text-sm uppercase tracking-wider text-rust">{"// Experience"}</span>
         <h2 className="mt-2 font-display text-3xl font-semibold text-brown-deep md:text-4xl">
           Six years reading patterns under pressure, before I had the statistics to name them
         </h2>
