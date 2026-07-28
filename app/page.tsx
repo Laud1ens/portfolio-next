@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <>
       <SiteHeader />
-      <div className="mx-auto max-w-[1080px] px-8">
+      <main className="mx-auto max-w-[1080px] px-8">
         <Hero />
         <ScrollReveal>
           <About />
@@ -29,7 +29,7 @@ export default function Home() {
         <ScrollReveal>
           <Skills />
         </ScrollReveal>
-      </div>
+      </main>
       <Contact />
     </>
   );

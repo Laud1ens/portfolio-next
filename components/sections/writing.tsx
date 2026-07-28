@@ -22,7 +22,7 @@ export function Writing() {
                   {post.title}
                 </h3>
                 <p className="mb-4 text-sm leading-relaxed text-brown">{post.teaser}</p>
-                <div className="font-mono text-xs text-brown/60">
+                <div className="font-mono text-xs text-brown/80">
                   {post.impressions.toLocaleString()} impressions on LinkedIn
                 </div>
               </CardContent>

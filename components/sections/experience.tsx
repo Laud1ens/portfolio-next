@@ -17,9 +17,9 @@ export function Experience() {
               <h3 className="font-display text-lg font-semibold text-brown-deep">
                 {entry.role} · {entry.company}
               </h3>
-              <span className="font-mono text-xs text-brown/70">{entry.period}</span>
+              <span className="font-mono text-xs text-brown/80">{entry.period}</span>
             </div>
-            <div className="mb-2 font-label text-xs uppercase tracking-wide text-brown/60">
+            <div className="mb-2 font-label text-xs uppercase tracking-wide text-brown/80">
               {entry.location}
             </div>
             <p className="leading-relaxed text-brown">{entry.description}</p>

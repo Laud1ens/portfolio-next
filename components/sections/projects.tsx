@@ -24,7 +24,7 @@ export function Projects() {
               <h3 className="mb-1 font-display text-xl font-semibold text-brown-deep">
                 {project.title}
               </h3>
-              <div className="mb-3 font-mono text-xs text-brown/70">{project.role}</div>
+              <div className="mb-3 font-mono text-xs text-brown/80">{project.role}</div>
               <p className="mb-2 text-sm leading-relaxed text-brown">
                 <strong>What I did: </strong>
                 {project.what}

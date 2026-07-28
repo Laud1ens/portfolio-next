@@ -13,9 +13,9 @@ export function Skills() {
       <div className="space-y-8">
         {skillGroups.map((group) => (
           <div key={group.title}>
-            <h4 className="mb-3 font-label text-sm font-semibold uppercase tracking-wide text-brown-deep">
+            <h3 className="mb-3 font-label text-sm font-semibold uppercase tracking-wide text-brown-deep">
               {group.title}
-            </h4>
+            </h3>
             <div className="flex flex-wrap gap-2">
               {group.skills.map((skill) => (
                 <Badge
