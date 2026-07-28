@@ -2,6 +2,7 @@ import Image from "next/image";
 import { hero } from "@/lib/content";
 import { AnimatedStat } from "@/components/animated-stat";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export function Hero() {
   return (
@@ -15,22 +16,31 @@ export function Hero() {
           <em className="text-rust not-italic md:italic">{hero.headlineEmphasis}</em>.
         </h1>
         <p className="mb-8 max-w-xl text-lg leading-relaxed text-brown">{hero.lede}</p>
-        <div className="mb-10 flex flex-wrap gap-3">
+        <div className="mb-10 flex flex-wrap items-center gap-3">
           {hero.ctas.map((cta) => (
-            <Button
-              key={cta.href}
-              asChild
-              variant={cta.primary ? "default" : "outline"}
-              className={
-                cta.primary
-                  ? "bg-brown-deep text-paper hover:bg-brown"
-                  : "border-brown-deep/30 text-brown-deep hover:bg-cream"
-              }
-            >
-              <a href={cta.href} target="_blank" rel="noopener noreferrer">
-                {cta.label}
-              </a>
-            </Button>
+            <span key={cta.href} className="inline-flex items-center gap-2">
+              <Button
+                asChild
+                variant={cta.primary ? "default" : "outline"}
+                className={
+                  cta.primary
+                    ? "bg-brown-deep text-paper hover:bg-brown"
+                    : "border-brown-deep/30 text-brown-deep hover:bg-cream"
+                }
+              >
+                <a href={cta.href} target="_blank" rel="noopener noreferrer">
+                  {cta.label}
+                </a>
+              </Button>
+              {cta.status === "in-progress" && (
+                <Badge
+                  variant="secondary"
+                  className="border border-taupe/40 bg-cream font-label text-[11px] font-medium uppercase tracking-wide text-brown"
+                >
+                  Updating
+                </Badge>
+              )}
+            </span>
           ))}
         </div>
         <div className="grid grid-cols-3 gap-4 border-t border-brown-deep/10 pt-6">
