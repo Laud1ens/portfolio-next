@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { hero } from "@/lib/content";
 import { AnimatedStat } from "@/components/animated-stat";
 import { Button } from "@/components/ui/button";
@@ -49,9 +52,19 @@ export function Hero() {
           ))}
         </div>
       </div>
-      <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-2xl shadow-[0_30px_60px_-30px_rgba(58,42,29,0.35)]">
-        <Image src="/headshot.png" alt="Laud Asante" fill className="object-cover" priority />
-      </div>
+      <motion.div
+        className="relative mx-auto aspect-square w-full max-w-sm"
+        animate={{ y: [0, -14, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <Image
+          src="/headshot.png"
+          alt="Laud Asante"
+          fill
+          className="rounded-full object-cover shadow-[0_25px_45px_-10px_rgba(58,42,29,0.3)]"
+          priority
+        />
+      </motion.div>
     </section>
   );
 }
