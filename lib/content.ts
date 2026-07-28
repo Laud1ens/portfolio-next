@@ -5,6 +5,15 @@ export interface Stat {
   label: string;
 }
 
+export interface LinkCta {
+  label: string;
+  href: string;
+  primary?: boolean;
+  /** Set when the destination itself (profile/page) is still being polished —
+   * renders a small "Updating" badge instead of implying it's finished. */
+  status?: "in-progress";
+}
+
 export const hero = {
   kicker: "Laud Asante · Data Science & AI",
   headline: "Forecasting, optimisation and deep learning, ",
@@ -13,9 +22,9 @@ export const hero = {
   ctas: [
     { label: "Download CV ↓", href: "/CV_Laud_Asante.pdf", primary: true },
     { label: "GitHub ↗", href: "https://github.com/Laud1ens" },
-    { label: "LinkedIn ↗", href: "https://www.linkedin.com/in/laud-asante-938382103/" },
+    { label: "LinkedIn ↗", href: "https://www.linkedin.com/in/laud-asante-938382103/", status: "in-progress" },
     { label: "Hugging Face ↗", href: "https://huggingface.co/laud1ens" },
-  ],
+  ] as LinkCta[],
   stats: [
     { value: 0.745, decimals: 3, label: "SARIMA R², county forecast" },
     { value: 98.5, suffix: "%", label: "Predictive maintenance accuracy" },
@@ -156,6 +165,18 @@ export const projects: Project[] = [
   },
 ];
 
+/**
+ * More projects get pushed to GitHub over time. Rather than hard-coding a
+ * count or a "latest" list that needs a code change per upload, this points
+ * to the live profile so newly published repos are discoverable immediately;
+ * promote a repo to a full `projects` entry above when it's ready for a
+ * proper case-study card.
+ */
+export const moreProjects = {
+  label: "More projects, added as they're published",
+  url: "https://github.com/Laud1ens?tab=repositories",
+};
+
 export interface WritingPost {
   title: string;
   teaser: string;
@@ -241,7 +262,7 @@ export const contact = {
   footerLinks: [
     { label: "Download CV", href: "/CV_Laud_Asante.pdf" },
     { label: "GitHub", href: "https://github.com/Laud1ens" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/laud-asante-938382103/" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/laud-asante-938382103/", status: "in-progress" },
     { label: "Hugging Face", href: "https://huggingface.co/laud1ens" },
-  ],
+  ] as LinkCta[],
 };
