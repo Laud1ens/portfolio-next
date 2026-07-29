@@ -1,6 +1,6 @@
 "use client";
 
-import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useInView } from "./use-in-view";
 import { AnimatedStat } from "@/components/animated-stat";
 
@@ -26,7 +26,12 @@ export function ComparisonBarChart({
   ];
 
   return (
-    <div ref={ref} className="w-full">
+    <div
+      ref={ref}
+      className="w-full"
+      role="img"
+      aria-label={`${primary.label} ${primary.value}, ${secondary.label} ${secondary.value}`}
+    >
       {headlineStat && (
         <div className="mb-4">
           <AnimatedStat
@@ -43,7 +48,7 @@ export function ComparisonBarChart({
       <div className="h-28 w-full">
         {inView && (
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} layout="vertical" margin={{ top: 4, right: 24, bottom: 4, left: 4 }}>
+            <BarChart data={data} layout="vertical" margin={{ top: 4, right: 46, bottom: 4, left: 4 }}>
               <XAxis
                 type="number"
                 hide
@@ -67,6 +72,36 @@ export function ComparisonBarChart({
                 }}
               />
               <Bar dataKey="value" radius={[0, 4, 4, 0]} isAnimationActive animationDuration={900}>
+                <LabelList
+                  dataKey="value"
+                  content={(props) => {
+                    const { x, y, width, height, value } = props as {
+                      x?: number;
+                      y?: number;
+                      width?: number;
+                      height?: number;
+                      value?: number | string;
+                    };
+                    if (x == null || y == null || width == null || height == null) return null;
+                    // Always anchor to the right edge of the bar's rect (x + width is the
+                    // rightmost point regardless of whether the value is positive or negative),
+                    // so the label never lands on top of the y-axis category labels for
+                    // near-zero/negative bars.
+                    const labelX = x + width + 6;
+                    const labelY = y + height / 2;
+                    return (
+                      <text
+                        x={labelX}
+                        y={labelY}
+                        dy={4}
+                        textAnchor="start"
+                        style={{ fontFamily: "var(--font-jbmono), monospace", fontSize: 11, fill: "#5B4130" }}
+                      >
+                        {Number(value).toFixed(valueDecimals)}
+                      </text>
+                    );
+                  }}
+                />
                 {data.map((entry) => (
                   <Cell key={entry.key} fill={entry.key === "primary" ? "#A9673F" : "#DFCBAF"} />
                 ))}

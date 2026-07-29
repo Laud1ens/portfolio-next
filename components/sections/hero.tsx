@@ -1,13 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { hero } from "@/lib/content";
 import { AnimatedStat } from "@/components/animated-stat";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 export function Hero() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <section className="grid grid-cols-1 items-center gap-12 pb-16 pt-44 md:grid-cols-[1.15fr_0.85fr]">
       <div>
@@ -54,8 +56,8 @@ export function Hero() {
       </div>
       <motion.div
         className="relative mx-auto aspect-square w-full max-w-sm"
-        animate={{ y: [0, -14, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        animate={prefersReducedMotion ? undefined : { y: [0, -14, 0] }}
+        transition={prefersReducedMotion ? undefined : { duration: 6, repeat: Infinity, ease: "easeInOut" }}
       >
         <Image
           src="/headshot.png"
