@@ -135,6 +135,23 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    tag: "Independent Research · Anomaly Detection",
+    title: "Anomaly Detection Under Distribution Shift: NSL-KDD & SECOM",
+    role: "Solo study · Jul 2026",
+    what: "Benchmarked eight detectors (supervised and one-class) on NSL-KDD intrusion data, evaluating them against 17 attack types deliberately held out of training, with every decision threshold calibrated on held-out traffic at a fixed 1% false-positive rate and then frozen.",
+    outcome: "A Random Forest scoring a perfect ROC-AUC of 1.0000 under random cross-validation detects just 5.2% of unseen attacks once held to the false-positive budget it was actually calibrated for, against 33.2% for an Isolation Forest. Its apparent 83% detection rate came from silently running at 9.75% false positives, nearly ten times its budget.",
+    impact: "a concrete demonstration that a detection rate reported without its false-positive rate ranks models in the wrong order, plus two failed hypotheses and an underpowered significance test documented rather than buried, which is the evidence trail a Security or ML Lead needs before trusting a benchmark number.",
+    repoUrl: "https://github.com/Laud1ens/anomaly-detection-under-drift",
+    visual: {
+      type: "comparisonBar",
+      headlineStat: { value: 6.4, decimals: 1, suffix: "x", label: "More unseen attacks caught, same false-alarm cost" },
+      primary: { label: "Isolation Forest", value: 33.2 },
+      secondary: { label: "Random Forest", value: 5.2 },
+      primaryCaption: "Novel-attack detection at a true 1% FPR (%)",
+      valueDecimals: 1,
+    },
+  },
+  {
     tag: "MSc Dissertation · University of Hull",
     title: "US County-Level Forecasting: SARIMA vs XGBoost vs GAT-LSTM",
     role: "Aug 2025 – Nov 2026 · Supervised by Dr. Tongxin Chen",
