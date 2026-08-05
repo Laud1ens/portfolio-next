@@ -27,8 +27,8 @@ export const hero = {
   ] as LinkCta[],
   stats: [
     { value: 0.745, decimals: 3, label: "SARIMA R², county forecast" },
-    { value: 98.5, suffix: "%", label: "Predictive maintenance accuracy" },
-    { value: 4, suffix: "x", label: "Faster reporting cycle" },
+    { value: 94.7, suffix: "%", decimals: 1, label: "Precision, machine-failure detection" },
+    { value: 0.974, decimals: 3, label: "AUC-ROC, sarcasm detection" },
   ] as Stat[],
 };
 
@@ -36,7 +36,7 @@ export const about = {
   paragraphs: [
     "I tell stories with data. Because behind every number, there's a decision waiting to be made.",
     "My background started in fast-paced sales and operational environments, where reading patterns under pressure wasn't optional. It was survival. That instinct for finding signal in noise is now what I bring to machine learning and data science, backed by an MSc in Data Science and Artificial Intelligence at the University of Hull.",
-    "I work across the full ML pipeline: wrangling messy real-world data, engineering features that actually matter, selecting and tuning models with care for the right metrics (not just accuracy), and translating outputs into decisions non-technical teams can act on. Recent projects include a predictive maintenance classifier that hit 98.5% accuracy on 10,000 machine records, an NLP sentiment pipeline reducing manual review time across a large customer corpus, and SQL-driven analytics dashboards that cut a 3-day reporting cycle down to 4 hours.",
+    "I work across the full ML pipeline: wrangling messy real-world data, engineering features that actually matter, selecting and tuning models with care for the right metrics (not just accuracy), and translating outputs into decisions non-technical teams can act on. Recent projects include a predictive maintenance classifier on 10,000 machine records where only 3.39% of machines actually fail, a base rate that makes accuracy meaningless and precision and cross-validated recall the numbers worth reporting; a six-model NLP comparison for sarcasm detection that reached 0.974 AUC-ROC in-domain and then collapsed to chance level on out-of-domain text, which turned out to be the more useful finding; and a seven-model forecasting benchmark across 3,219 US counties where the simplest model is currently beating the most complex one.",
     "I write Python, think statistically, and communicate findings in plain language. I care deeply about why a model works, not just that it does. Open to data scientist, ML/DL, and graduate roles across the UK.",
   ],
   pivotCard: {
@@ -139,14 +139,14 @@ export const projects: Project[] = [
     title: "Anomaly Detection Under Distribution Shift: NSL-KDD & SECOM",
     role: "Solo study · Jul 2026",
     what: "Benchmarked eight detectors (supervised and one-class) on NSL-KDD intrusion data, evaluating them against 17 attack types deliberately held out of training, with every decision threshold calibrated on held-out traffic at a fixed 1% false-positive rate and then frozen.",
-    outcome: "A Random Forest scoring a perfect ROC-AUC of 1.0000 under random cross-validation detects just 5.2% of unseen attacks once held to the false-positive budget it was actually calibrated for, against 33.2% for an Isolation Forest. Its apparent 83% detection rate came from silently running at 9.75% false positives, nearly ten times its budget.",
+    outcome: "A Random Forest scoring a perfect ROC-AUC of 1.0000 under random cross-validation detects just 5.1% of unseen attacks once held to the false-positive budget it was actually calibrated for, against 33.2% for an Isolation Forest. Its apparent 83.2% detection rate came from silently running at 9.75% false positives, nearly ten times its budget.",
     impact: "a concrete demonstration that a detection rate reported without its false-positive rate ranks models in the wrong order, plus two failed hypotheses and an underpowered significance test documented rather than buried, which is the evidence trail a Security or ML Lead needs before trusting a benchmark number.",
     repoUrl: "https://github.com/Laud1ens/anomaly-detection-under-drift",
     visual: {
       type: "comparisonBar",
       headlineStat: { value: 6.4, decimals: 1, suffix: "x", label: "More unseen attacks caught, same false-alarm cost" },
       primary: { label: "Isolation Forest", value: 33.2 },
-      secondary: { label: "Random Forest", value: 5.2 },
+      secondary: { label: "Random Forest", value: 5.1 },
       primaryCaption: "Novel-attack detection at a true 1% FPR (%)",
       valueDecimals: 1,
     },
@@ -212,15 +212,15 @@ export const projects: Project[] = [
     title: "Manufacturing Analytics: Predictive Maintenance (AI4I2020)",
     role: "Solo build",
     what: "Built a predictive maintenance classifier on the AI4I2020 industrial dataset (10,000 machine records), engineering sensor-derived features and focusing evaluation choices on what actually holds up under class imbalance rather than raw accuracy.",
-    outcome: "Reached 98.5% accuracy on held-out machine-failure prediction, validated against imbalance-aware metrics rather than accuracy alone.",
+    outcome: "Failures are 3.39% of the dataset, so predicting \"no failure\" every time already scores 96.6% accuracy. No accuracy figure is reported anywhere in the project. Gradient Boosting, selected on F1, reached 94.7% precision with cross-validated recall of 0.761 ± 0.057 across 5 stratified folds, holding 76-84% recall on every machine type including the low-grade units that fail at nearly twice the rate.",
     impact: "gives a Plant or Operations Manager a decision-ready early-warning signal for machine failure, cutting unplanned downtime risk.",
     repoUrl: "https://github.com/Laud1ens/Manufacturing-Analytics-Predictive-Maintenance-AI4I2020",
     visual: {
       type: "radialStat",
-      value: 98.5,
+      value: 94.7,
       suffix: "%",
       decimals: 1,
-      label: "Predictive maintenance accuracy",
+      label: "Precision, machine-failure detection",
     },
   },
 ];
