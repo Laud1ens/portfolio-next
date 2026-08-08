@@ -60,7 +60,36 @@ export function Evolution() {
           right is the hard bit.
         </p>
 
-        <div className="mt-8 overflow-hidden rounded-xl bg-paper">
+        {/* The clip. Poster carries the same artwork, so a browser that will
+            not play VP8 still shows the full progression rather than a gap. */}
+        <div className="mt-8 overflow-hidden rounded-xl bg-paper motion-reduce:hidden">
+          <video
+            className="block h-auto w-full"
+            src="/evolution.webm"
+            poster="/evolution-poster.jpg"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            aria-label="A figure evolving through four stages: crawling infant, walking child, augmented humanoid, and a machine accelerating away"
+          />
+        </div>
+
+        <div className="mt-3 grid grid-cols-4 gap-2">
+          {LABELS.map((l) => (
+            <div
+              key={l}
+              className="text-center font-label text-[0.66rem] uppercase tracking-wider text-rust/80"
+            >
+              {l}
+            </div>
+          ))}
+        </div>
+
+        {/* Reduced-motion and no-video fallback: the same four stages as static
+            line art, holding still. */}
+        <div className="mt-8 hidden overflow-hidden rounded-xl bg-paper motion-reduce:block">
           <svg
             viewBox="0 0 900 260"
             className="h-auto w-full"
