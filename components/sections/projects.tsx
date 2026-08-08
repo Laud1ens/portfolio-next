@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { ComparisonBarChart } from "@/components/charts/comparison-bar-chart";
 import { FlowDiagram } from "@/components/charts/flow-diagram";
 import { RadialStat } from "@/components/charts/radial-stat";
+import { ProjectDetailPanel } from "@/components/sections/project-detail";
 import type { ProjectVisual } from "@/lib/content";
 
 function ProjectVisualPanel({ visual }: { visual: ProjectVisual }) {
@@ -47,9 +48,11 @@ export function Projects() {
         {projects.map((project) => (
           <Card
             key={project.title}
+            data-project-card
             className="border-brown-deep/10 bg-cream transition-shadow hover:shadow-[0_20px_40px_-20px_rgba(58,42,29,0.25)]"
           >
-            <CardContent className="grid grid-cols-1 gap-6 p-6 md:grid-cols-[0.85fr_1.15fr] md:items-center">
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-[0.85fr_1.15fr] md:items-center">
               {project.visual && (
                 <div className="flex items-center justify-center rounded-lg bg-paper p-5">
                   <ProjectVisualPanel visual={project.visual} />
@@ -86,6 +89,8 @@ export function Projects() {
                   </a>
                 )}
               </div>
+              </div>
+              {project.detail && <ProjectDetailPanel detail={project.detail} />}
             </CardContent>
           </Card>
         ))}
