@@ -34,7 +34,17 @@ export function ProjectDetailPanel({ detail }: { detail: ProjectDetail }) {
     const io = new IntersectionObserver(
       ([entry]) => {
         fired = true;
-        setInView(entry.isIntersecting);
+        if (!entry.isIntersecting) return;
+        // Reveal once, then stop watching. Re-collapsing looks tidy in theory
+        // and is unusable in practice: these panels are 1,400-2,900px tall, so
+        // every close rips thousands of pixels out from under the reader.
+        // Measured on production, collapse-on-exit passed 6/6 scrolling down
+        // and only 3/6 scrolling up, because travelling upward collapsed the
+        // card below and threw the viewport past the target. Opening once and
+        // staying open keeps the reveal effect and makes both directions
+        // stable, since the growth always happens ahead of the reader.
+        setInView(true);
+        io.unobserve(target);
       },
       { rootMargin: "300px 0px 300px 0px", threshold: 0 },
     );
