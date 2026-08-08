@@ -14,16 +14,49 @@ export interface LinkCta {
   status?: "in-progress";
 }
 
+/** Opens Gmail's compose window with the message already drafted, so the
+ *  sender only fills in the bracketed bits. Deliberately casual: a blank
+ *  mailto gets ignored, a half-written one gets finished and sent. */
+const CV_REQUEST_BODY = [
+  "Hi Laud,",
+  "",
+  "I came across your portfolio through [LinkedIn / a friend / browsing online / somewhere else - say which].",
+  "",
+  "What caught my interest was your work on [which project or which area].",
+  "",
+  "Could you send your CV over? Happy to take it from there.",
+  "",
+  "Or if there is a project on my side you might want to work on, I have put a bit about it below and you can come back to me.",
+  "",
+  "About the project (optional):",
+  "",
+  "",
+  "My details",
+  "Name:",
+  "Organisation:",
+  "Role:",
+  "Email:",
+  "Phone:",
+  "",
+  "Thanks",
+].join("\n");
+
+export const CV_REQUEST_MAILTO =
+  "https://mail.google.com/mail/?view=cm&fs=1&to=asantelaud%40gmail.com" +
+  "&su=" +
+  encodeURIComponent("Your CV, and possibly a project") +
+  "&body=" +
+  encodeURIComponent(CV_REQUEST_BODY);
+
 export const hero = {
   kicker: "Laud Asante · Data Science & AI",
   headline: "Forecasting, optimisation and deep learning, ",
   headlineEmphasis: "built to be acted on",
   lede: "MSc Data Science & Artificial Intelligence student at the University of Hull. I build time-series forecasts, neural networks and optimisation pipelines, then translate the output into a decision a manager can actually use.",
   ctas: [
-    { label: "Request CV ✉", href: "mailto:asantelaud@gmail.com?subject=CV%20request&body=Hi%20Laud%2C%0A%0AI%27d%20like%20a%20copy%20of%20your%20CV%20for%20the%20following%20role%3A%0A%0A", primary: true },
+    { label: "Request CV ✉", href: CV_REQUEST_MAILTO, primary: true },
     { label: "GitHub ↗", href: "https://github.com/Laud1ens" },
     { label: "LinkedIn ↗", href: "https://www.linkedin.com/in/laud-asante-938382103/", status: "in-progress" },
-    { label: "Hugging Face ↗", href: "https://huggingface.co/laud1ens" },
   ] as LinkCta[],
   stats: [
     { value: 0.745, decimals: 3, label: "SARIMA R², county forecast" },
@@ -136,12 +169,30 @@ export interface DetailSection {
   stat?: { value: string; label: string };
 }
 
+/** A single hard fact about the source data, rendered as a small stat chip. */
+export interface DatasetFact {
+  label: string;
+  value: string;
+}
+
 /** Long-form expansion revealed on scroll. Every figure and number here is
  *  produced by the project's own code; nothing is illustrative. */
 export interface ProjectDetail {
   kicker: string;
   headline: string;
+  /** One paragraph orienting the reader before any detail. */
+  intro: string;
+  /** Where the data came from and what is actually in it. */
+  dataset: {
+    name: string;
+    source: string;
+    body: string;
+    facts: DatasetFact[];
+  };
+  /** The findings themselves. */
   sections: DetailSection[];
+  /** The same result explained without jargon. */
+  plainEnglish: string;
   figures?: DetailFigure[];
 }
 
@@ -169,6 +220,18 @@ export const projects: Project[] = [
     detail: {
       kicker: "The benchmark lied",
       headline: "A perfect score on the test set, and almost nothing caught in the field.",
+      intro: "Intrusion detection models are usually judged on how well they spot attacks they have already seen. That is the easy half of the problem. The interesting question is what happens when a genuinely new attack arrives, and whether the model's alarm threshold still means what it meant on the day it was calibrated. This study was built to answer that, and the answer inverted the leaderboard.",
+      dataset: {
+        name: "NSL-KDD",
+        source: "Canadian Institute for Cybersecurity, University of New Brunswick",
+        body: "Network connection records labelled as normal traffic or one of many attack types. The test set deliberately contains 17 attack types that appear nowhere in training, which is what makes it usable for measuring genuine novelty rather than memorisation. Every threshold was calibrated on held-out normal traffic at a fixed 1% false-positive budget, then frozen before the test set was touched.",
+        facts: [
+          { label: "Training records", value: "125,973" },
+          { label: "Test records", value: "22,544" },
+          { label: "Unseen attack types", value: "17" },
+          { label: "Novel records in test", value: "3,750" },
+        ],
+      },
       sections: [
         {
           heading: "What a perfect ROC-AUC actually bought",
@@ -189,6 +252,7 @@ export const projects: Project[] = [
           body: "Two hypotheses were tested and failed, including the expectation that supervised models would degrade more than one-class models on novel attacks. The Mann-Whitney test on that comparison returned p = 0.39 across three supervised and five one-class detectors, which is underpowered and reported as such. Both are in the write-up. A benchmark that only contains the results that worked is not a benchmark.",
         },
       ],
+      plainEnglish: "Think of a smoke alarm tested only with the kind of smoke it was built for. It passes perfectly, so you fit it and forget it. Then a different kind of fire starts, and the alarm stays quiet. Worse, the one you rejected as too twitchy turns out to catch six times more of the fires you did not anticipate, for the same number of false alarms a week. The lesson is not that one detector is better. It is that a detection rate quoted without the false-alarm rate that came with it will rank your options in the wrong order.",
       figures: [
         {
           src: "/figures/anomaly-threshold-drift.png",
@@ -221,6 +285,18 @@ export const projects: Project[] = [
     detail: {
       kicker: "In progress",
       headline: "Seven models across 3,219 counties, and the simplest one is currently ahead.",
+      intro: "The premise of most forecasting research is that more structure wins: give a model the graph of how people move between places and it should beat a model that only sees one county's own history. This dissertation tests that premise at national scale rather than assuming it, and so far the premise is losing.",
+      dataset: {
+        name: "US county-level COVID-19 case series with inter-county mobility",
+        source: "Public county case reporting, joined to weekly mobility flow data",
+        body: "Weekly case counts for every county in the contiguous United States, paired with a mobility graph whose edges are weekly flows between counties. The graph is what the GAT-LSTM architectures consume as neighbourhood structure. The classical models see only each county's own history, which is precisely the comparison that makes the benchmark meaningful.",
+        facts: [
+          { label: "US counties", value: "3,219" },
+          { label: "Models benchmarked", value: "7" },
+          { label: "Notebooks in pipeline", value: "4" },
+          { label: "Current best R squared", value: "0.745" },
+        ],
+      },
       sections: [
         {
           heading: "The result so far, and it is not the expected one",
@@ -236,6 +312,7 @@ export const projects: Project[] = [
           body: "This is live dissertation work supervised by Dr Tongxin Chen, submitting August 2026. The numbers above are current, not final, and the ranking could still change as the remaining architectures are tuned. They are quoted here as work in progress rather than as a conclusion.",
         },
       ],
+      plainEnglish: "Imagine predicting how busy a shop will be next week. One method looks only at how busy that shop has been. Another also looks at traffic between all the surrounding towns, on the reasonable theory that people move around. The second method is far more sophisticated and much more expensive to build. Right now, across more than three thousand areas, the simple method is winning. That is worth knowing before an organisation spends a year building the complicated one.",
     },
     visual: {
       type: "comparisonBar",
@@ -255,6 +332,18 @@ export const projects: Project[] = [
     detail: {
       kicker: "Shipped, not notebooked",
       headline: "A working browser product wiring live market data to three separate LLM providers.",
+      intro: "Almost everything in a data science portfolio is a notebook that ran once on a static file. This is the opposite: a live product with real-time inputs, three third-party model providers, and all the failure modes that only appear when something is actually running and someone is actually looking at it.",
+      dataset: {
+        name: "Live foreign-exchange market feed",
+        source: "Twelve Data API, with Claude, Groq and Gemini as reasoning providers",
+        body: "Streaming currency pair data rather than a fixed file. That distinction drives the whole architecture: rate limits, partial responses, provider disagreement and malformed payloads are ordinary operating conditions, not edge cases, and the interface has to stay honest while any of them are happening.",
+        facts: [
+          { label: "LLM providers", value: "3" },
+          { label: "Market data source", value: "Twelve Data" },
+          { label: "Build", value: "Solo, end to end" },
+          { label: "Prediction layer", value: "In scoping" },
+        ],
+      },
       sections: [
         {
           heading: "What it does",
@@ -269,6 +358,7 @@ export const projects: Project[] = [
           body: "There is no accuracy figure here, because the prediction layer is still being scoped. Adding one would mean quoting a backtest that has not been run. The next step is an XGBoost baseline, then a Temporal Fusion Transformer, and the numbers get published when they exist.",
         },
       ],
+      plainEnglish: "This is a working website that watches currency markets and explains, in ordinary language, what is happening and why it might matter. It asks three different AI services rather than one, so that if a provider goes down or gives a strange answer the tool keeps working. It does not predict prices, and it does not pretend to. The prediction part is being built next, and the numbers will be published when they are real.",
     },
     visual: {
       type: "flow",
@@ -287,6 +377,18 @@ export const projects: Project[] = [
     detail: {
       kicker: "It was cheating",
       headline: "The best model scored 92% in-domain and exactly chance level the moment the sentences came from somewhere else.",
+      intro: "Sarcasm is the case where literal meaning and intended meaning point in opposite directions, which is why sentiment tools handle it so badly. This project compared six approaches to detecting it, found a clear winner, and then asked the question that decides whether a model is real: does it still work on text it has never seen the style of?",
+      dataset: {
+        name: "Sarcasm Headlines Dataset",
+        source: "News headlines from a satirical and a straight publication",
+        body: "Headlines labelled sarcastic or not, which makes labelling reliable but introduces a trap: the two classes come from two different publications, so a model can score well by learning house style instead of sarcasm. A separate hand-built probe of 24 out-of-domain sentences was used to test exactly that.",
+        facts: [
+          { label: "Headlines", value: "28,503" },
+          { label: "Approaches compared", value: "6" },
+          { label: "Out-of-domain probes", value: "24" },
+          { label: "Significance test", value: "McNemar, p < 0.001" },
+        ],
+      },
       sections: [
         {
           heading: "Six approaches, one honest test",
@@ -307,6 +409,7 @@ export const projects: Project[] = [
           body: "A model comparison that ends at the leaderboard would have shipped the transformer. The out-of-domain probe is cheap, takes 24 sentences, and is the difference between a model that works and a model that appears to. This is the check worth running before trusting any benchmark number, including your own.",
         },
       ],
+      plainEnglish: "The model was trained on headlines from two publications: one satirical, one serious. It scored brilliantly, and it achieved that by learning to recognise which newspaper a headline came from, not by understanding sarcasm. Shown sarcastic sentences written by ordinary people, it was no better than flipping a coin. Twenty-four test sentences were enough to reveal that. Without them it would have looked ready to ship.",
     },
     visual: {
       type: "comparisonBar",
@@ -327,6 +430,18 @@ export const projects: Project[] = [
     detail: {
       kicker: "Marked, then re-opened",
       headline: "The graded submission had filtered the wrong vehicle codes, and the missing class was the most dangerous one.",
+      intro: "This was submitted, marked and finished. Going back to it afterwards, against the raw database rather than the write-up, turned up a filtering error that had quietly reshaped one of the headline findings. Everything below is the corrected version, with the size of the original error stated rather than smoothed over.",
+      dataset: {
+        name: "STATS19 road casualty records, plus SNAP ego-networks",
+        source: "UK Department for Transport, and Stanford SNAP",
+        body: "STATS19 is the national record of road collisions reported to police, one row per collision, joined to casualty and vehicle tables. Codes are numeric and their meanings are not self-evident, which is exactly where the error came from. The social network half uses Stanford's anonymised Facebook ego-networks, and the two datasets share no entities: they are parallel exercises in different techniques, not an integrated study.",
+        facts: [
+          { label: "Collision records", value: "461,352" },
+          { label: "Casualty records", value: "600,332" },
+          { label: "Vehicle records", value: "849,091" },
+          { label: "Network nodes / edges", value: "4,039 / 88,234" },
+        ],
+      },
       sections: [
         {
           heading: "One digit, thirty-one per cent of the data",
@@ -347,6 +462,7 @@ export const projects: Project[] = [
           body: "In the association-rule mining, the top rule by lift is Rain to Wet Road at 4.22. Rain is what makes roads wet. Sorting a rule table by lift puts mechanical relationships at the top, which is why conviction is reported alongside it. The actionable rules are the moderate-lift ones tied to things a highway authority can change: speed limits and street lighting.",
         },
       ],
+      plainEnglish: "Motorcycles in this national database are recorded in four engine-size categories, numbered 2 to 5. The original analysis used 2, 3 and 4, and labelled them as though they were the full range. They are not: the largest bikes are category 5, and they were left out entirely. That removed one motorbike in three from the study, and specifically the ones most likely to be involved in a fatal or serious collision. So the work concluded motorcycle collisions were less severe, and more of a weekday commuting problem, than they really are. One wrong number in a filter, and a road safety finding points at the wrong riders.",
       figures: [
         {
           src: "/figures/roads-motorcycles-corrected.png",
@@ -380,6 +496,18 @@ export const projects: Project[] = [
     detail: {
       kicker: "When accuracy is a trap",
       headline: "Only 3.39% of these machines fail, so a model that never predicts failure is already 96.6% accurate.",
+      intro: "Rare events break the metric everyone reaches for first. When almost nothing fails, a model can be spectacularly accurate and completely useless at the same time, and the number on the slide will not tell you which one you have. This project is built around refusing that number and reporting the ones that survive the imbalance.",
+      dataset: {
+        name: "AI4I 2020 Predictive Maintenance Dataset",
+        source: "Matzka (2020), UCI Machine Learning Repository, CC BY 4.0",
+        body: "Ten thousand snapshots of a milling machine: air and process temperature, rotational speed, torque and tool wear, with a binary failure flag. It is synthetic, generated to reproduce realistic failure dynamics rather than logged from a real plant, and it holds no timestamps linking rows into a machine's history. Both facts bound what it can honestly support.",
+        facts: [
+          { label: "Machine records", value: "10,000" },
+          { label: "Actual failures", value: "339" },
+          { label: "Failure rate", value: "3.39%" },
+          { label: "Naive-model accuracy", value: "96.6%" },
+        ],
+      },
       sections: [
         {
           heading: "Why no accuracy figure appears anywhere",
@@ -400,6 +528,7 @@ export const projects: Project[] = [
           body: "The write-up stated tool wear was the dominant predictive signal, confirmed by two independent methods. Re-running both from the raw data contradicted it. Permutation importance ranks rotational speed first with tool wear fourth; the impurity-based method ranks power output first with tool wear third. The two methods disagree with each other, so neither is quoted as definitive. The correction is documented rather than quietly dropped.",
         },
       ],
+      plainEnglish: "Out of ten thousand machines, only 339 actually broke. So a system that shrugs and says everything is fine, every single time, is right 96.6% of the time. That sounds like a triumph and is worth nothing, because it never once warns you. The honest questions are different: of the machines that really did break, how many did we catch, and of the alarms we raised, how many were real. This model catches roughly three in four breakdowns and is right about 95% of the time it raises an alarm. The most useful thing in the whole study needs no model at all: once a cutting tool passes about 150 minutes of wear, the failure rate roughly triples.",
       figures: [
         {
           src: "/figures/ai4i-toolwear-band.png",
@@ -518,9 +647,8 @@ export const contact = {
     { label: "Location", value: "Hull, UK" },
   ],
   footerLinks: [
-    { label: "Request CV", href: "mailto:asantelaud@gmail.com?subject=CV%20request" },
+    { label: "Request CV", href: CV_REQUEST_MAILTO },
     { label: "GitHub", href: "https://github.com/Laud1ens" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/laud-asante-938382103/", status: "in-progress" },
-    { label: "Hugging Face", href: "https://huggingface.co/laud1ens" },
   ] as LinkCta[],
 };

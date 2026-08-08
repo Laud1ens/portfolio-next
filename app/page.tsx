@@ -6,6 +6,7 @@ import { Projects } from "@/components/sections/projects";
 import { Writing } from "@/components/sections/writing";
 import { Skills } from "@/components/sections/skills";
 import { Contact } from "@/components/sections/contact";
+import { Evolution } from "@/components/sections/evolution";
 import { ScrollReveal } from "@/components/scroll-reveal";
 
 export default function Home() {
@@ -19,6 +20,9 @@ export default function Home() {
         </ScrollReveal>
         <ScrollReveal>
           <Experience />
+        </ScrollReveal>
+        <ScrollReveal>
+          <Evolution />
         </ScrollReveal>
         <ScrollReveal>
           <Projects />
