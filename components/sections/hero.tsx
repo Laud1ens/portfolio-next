@@ -54,19 +54,67 @@ export function Hero() {
           ))}
         </div>
       </div>
-      <motion.div
-        className="relative mx-auto aspect-square w-full max-w-sm"
-        animate={prefersReducedMotion ? undefined : { y: [0, -14, 0] }}
-        transition={prefersReducedMotion ? undefined : { duration: 6, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <Image
-          src="/headshot.png"
-          alt="Laud Asante"
-          fill
-          className="rounded-full object-cover shadow-[0_25px_45px_-10px_rgba(58,42,29,0.3)]"
-          priority
+      {/* Bounce with weight: a big hop, a smaller secondary hop, and a squash
+          on each landing. The ground shadow tightens as it rises and spreads
+          as it lands, which is what stops it reading as a sticker sliding up
+          and down. A short pause between cycles keeps it from nagging. */}
+      <div className="relative mx-auto w-full max-w-sm">
+        <motion.div
+          className="relative aspect-square w-full"
+          animate={
+            prefersReducedMotion
+              ? undefined
+              : {
+                  y: [0, -30, 0, -10, 0],
+                  scaleX: [1, 0.985, 1.035, 0.995, 1],
+                  scaleY: [1, 1.02, 0.965, 1.008, 1],
+                }
+          }
+          transition={
+            prefersReducedMotion
+              ? undefined
+              : {
+                  duration: 3.4,
+                  times: [0, 0.32, 0.6, 0.8, 1],
+                  repeat: Infinity,
+                  repeatDelay: 0.7,
+                  ease: "easeInOut",
+                }
+          }
+          style={{ transformOrigin: "50% 100%" }}
+        >
+          <Image
+            src="/headshot.png"
+            alt="Laud Asante"
+            fill
+            className="rounded-full object-cover shadow-[0_25px_45px_-10px_rgba(58,42,29,0.3)]"
+            priority
+          />
+        </motion.div>
+        <motion.div
+          aria-hidden
+          className="mx-auto mt-3 h-3 rounded-[50%] bg-brown-deep/20 blur-[6px]"
+          animate={
+            prefersReducedMotion
+              ? { width: "60%", opacity: 0.35 }
+              : {
+                  width: ["62%", "42%", "68%", "52%", "62%"],
+                  opacity: [0.32, 0.16, 0.36, 0.24, 0.32],
+                }
+          }
+          transition={
+            prefersReducedMotion
+              ? undefined
+              : {
+                  duration: 3.4,
+                  times: [0, 0.32, 0.6, 0.8, 1],
+                  repeat: Infinity,
+                  repeatDelay: 0.7,
+                  ease: "easeInOut",
+                }
+          }
         />
-      </motion.div>
+      </div>
     </section>
   );
 }
