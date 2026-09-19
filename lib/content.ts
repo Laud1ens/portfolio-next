@@ -810,7 +810,7 @@ export const stackGaps: ToolGap[] = [
   {
     tool: "Docker",
     reason:
-      "Not used yet. Everything I run is containerised by a platform build system on my behalf, which means I cannot reproduce production locally. First item on the list to close.",
+      "Not used yet, and I can tell you exactly why rather than wave at it. Everything I run is containerised by a platform build system on my behalf, so I cannot reproduce production locally. Closing that on my current machine means Docker Engine inside WSL2 rather than Docker Desktop: 7.7GB of RAM is under Desktop's 8GB minimum and there is 16.7GB of disk free, against roughly 4GB for Desktop plus 4 to 5GB per image. Engine in WSL2 is about 2GB with no Windows version gate. Knowing the constraint is not the same as having done it, so it sits here rather than in the list above.",
   },
   {
     tool: "Kubernetes",
