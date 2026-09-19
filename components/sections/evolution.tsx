@@ -41,9 +41,16 @@ export function Evolution() {
 
         {/* The clip. Hidden outright when the reader has asked for less motion. */}
         <div className="mt-8 overflow-hidden rounded-xl bg-paper motion-reduce:hidden">
+          {/* Two sources, in preference order.
+              evolution.mp4 is the slot for an AI-generated replacement clip:
+              drop that file into /public and the browser picks it with no code
+              change, and the hand-animated webm stays underneath as the
+              fallback so the section is never broken while that file does not
+              exist. Worth shipping both regardless of which is newer, because
+              iOS Safari will not decode the VP8 webm at all and needs the
+              H.264 MP4. */}
           <video
             className="block h-auto w-full"
-            src="/evolution.webm"
             poster="/evolution-poster.jpg"
             autoPlay
             loop
@@ -51,7 +58,10 @@ export function Evolution() {
             playsInline
             preload="metadata"
             aria-label="A figure evolving through four stages: crawling infant, walking toddler, augmented humanoid, and a machine accelerating away"
-          />
+          >
+            <source src="/evolution.mp4" type="video/mp4" />
+            <source src="/evolution.webm" type="video/webm" />
+          </video>
         </div>
 
         {/* Reduced-motion, and any browser that will not play VP8: the same

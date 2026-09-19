@@ -69,8 +69,12 @@ export const about = {
   paragraphs: [
     "I tell stories with data. Because behind every number, there's a decision waiting to be made.",
     "My background started in fast-paced sales and operational environments, where reading patterns under pressure wasn't optional. It was survival. That instinct for finding signal in noise is now what I bring to machine learning and data science, backed by an MSc in Data Science and Artificial Intelligence at the University of Hull.",
-    "I work across the full ML pipeline: wrangling messy real-world data, engineering features that actually matter, selecting and tuning models with care for the right metrics (not just accuracy), and translating outputs into decisions non-technical teams can act on. Recent projects include a predictive maintenance classifier on 10,000 machine records where only 3.39% of machines actually fail, a base rate that makes accuracy meaningless and precision and cross-validated recall the numbers worth reporting; a six-model NLP comparison for sarcasm detection that reached 0.974 AUC-ROC in-domain and then collapsed to chance level on out-of-domain text, which turned out to be the more useful finding; and a seven-model forecasting benchmark across 3,219 US counties where the simplest model is currently beating the most complex one.",
-    "I write Python, think statistically, and communicate findings in plain language. I care deeply about why a model works, not just that it does. Open to data scientist, ML/DL, and graduate roles across the UK.",
+    // The old version of this paragraph re-told three project results in full,
+    // which the project cards below already do properly and at length. Saying
+    // it twice made the page longer without making the case stronger, so this
+    // now says how I work and leaves the evidence to the work.
+    "I work across the full ML pipeline: wrangling messy real-world data, engineering features that actually matter, selecting and tuning models for the metric the problem calls for rather than the one that flatters the result, and translating what comes out into a decision a non-technical team can act on. The projects below are the evidence, including the two where the honest finding was that my hypothesis was wrong.",
+    "I write Python, think statistically, and explain findings in plain language. I care about why a model works, not just that it does. Open to data scientist, ML/DL and graduate roles across the UK, and you can ask Laudbot in the corner about any of it.",
   ],
   pivotCard: {
     title: "How I actually work",
@@ -309,7 +313,7 @@ export const projects: Project[] = [
         },
         {
           heading: "Status and honesty about it",
-          body: "This is live dissertation work supervised by Dr Tongxin Chen, submitting August 2026. The numbers above are current, not final, and the ranking could still change as the remaining architectures are tuned. They are quoted here as work in progress rather than as a conclusion.",
+          body: "This is live dissertation work supervised by Dr Tongxin Chen, submitting November 2026. The numbers above are current, not final, and the ranking could still change as the remaining architectures are tuned. They are quoted here as work in progress rather than as a conclusion.",
         },
       ],
       plainEnglish: "Imagine predicting how busy a shop will be next week. One method looks only at how busy that shop has been. Another also looks at traffic between all the surrounding towns, on the reasonable theory that people move around. The second method is far more sophisticated and much more expensive to build. Right now, across more than three thousand areas, the simple method is winning. That is worth knowing before an organisation spends a year building the complicated one.",
@@ -564,6 +568,86 @@ export const moreProjects = {
   url: "https://github.com/Laud1ens?tab=repositories",
 };
 
+/** Work in flight, and work deliberately not started yet.
+ *
+ *  This section exists because a portfolio of finished things reads as a
+ *  person who has stopped. It is also the only honest place to put the gaps:
+ *  "Next up" items are named with what is missing, not dressed up as
+ *  experience. Nothing moves from "Next up" to "Building" until it has
+ *  actually been started. */
+export type WipStage = "Building" | "Scoping" | "Next up";
+
+export interface WipItem {
+  title: string;
+  stage: WipStage;
+  /** What it is, in one or two plain sentences. */
+  what: string;
+  /** Why this specific thing matters for an AI engineering role. */
+  whyItMatters: string;
+  /** Where it actually stands today, including what is not proven. */
+  status: string;
+  tools?: string[];
+}
+
+export const currentlyWorkingOn: WipItem[] = [
+  {
+    title: "Staffing platform for a Hull recruitment agency",
+    stage: "Building",
+    what: "A production recruitment portal: shift allocation, document verification, a four-rank permission model, and an in-app assistant that answers staff questions from the agency's own published policies.",
+    whyItMatters:
+      "It is the only system I have built that holds real people's working hours and bank details, so it is where I have had to think about field encryption, role boundaries and audit trails rather than only about model accuracy. Most ML work fails in production for reasons that look like this, not like a loss curve.",
+    status:
+      "Built and deployed on Railway. 49,075 lines of TypeScript across 316 files, with 19 test suites. I do not claim adoption figures, because whether the agency has switched their day-to-day operation onto it is their decision and not yet confirmed.",
+    tools: ["Next.js", "Postgres", "Drizzle", "Auth.js", "Gemini", "Railway"],
+  },
+  {
+    title: "Retrieval pipeline behind that assistant",
+    stage: "Building",
+    what: "Scrape, chunk, embed, retrieve, cite. Cosine similarity computed in memory against stored vectors rather than in a vector database, with a relevance floor so the assistant is able to return nothing at all.",
+    whyItMatters:
+      "The interesting part of retrieval is not the embedding call, it is the refusal. Without a floor, a nearest-neighbour search always returns neighbours, so asking it who won the 1966 World Cup hands the model the five least unrelated paragraphs about a staffing agency and invites a confident wrong answer. The floor is what buys the ability to say 'I don't know'.",
+    status:
+      "Built and unit tested. The relevance floor is currently 0.55 and is a reasoned starting point, not a tuned value. Tuning it properly needs a labelled question set, which is the next item on this list.",
+    tools: ["Gemini embeddings", "Cosine similarity", "Chunking with overlap"],
+  },
+  {
+    title: "Evaluation harness for both assistants",
+    stage: "Next up",
+    what: "A fixed question set with known answers, scored on two things: did retrieval surface the right passage, and did the bot correctly refuse the questions it should not answer.",
+    whyItMatters:
+      "I can currently tell you exactly what is unproven about my own retrieval, which is better than not knowing, but it is not the same as having measured it. Being able to say a change improved answer quality by a number is the difference between tuning and guessing.",
+    status: "Not started. Named here because it is the honest gap, not because it is done.",
+  },
+  {
+    title: "Prediction layer for NexaHeat FX",
+    stage: "Scoping",
+    what: "An XGBoost baseline first, then a Temporal Fusion Transformer, over the live currency data the platform already ingests.",
+    whyItMatters:
+      "The platform currently explains what the market is doing. It does not forecast, and I have not pretended otherwise anywhere on this site. Adding a forecast means owning a backtest that can embarrass me, which is the right order to do it in.",
+    status:
+      "Scoping. No accuracy figure is published anywhere, because no backtest has been run yet. The numbers go up when they exist.",
+    tools: ["XGBoost", "Temporal Fusion Transformer"],
+  },
+  {
+    title: "Containerised deployment I actually control",
+    stage: "Next up",
+    what: "Docker images for the portfolio and the staffing portal, so the runtime is something I define rather than something a platform infers for me.",
+    whyItMatters:
+      "Everything I run today is deployed by a build system that decides the container on my behalf. That works until it does not, and it means I cannot reproduce a production environment locally. For an AI engineering role that ships models, that gap is the one worth closing first.",
+    status:
+      "Not started. Listed deliberately rather than quietly left off, because pretending otherwise is the sort of thing that falls apart in a technical interview.",
+  },
+  {
+    title: "Final dissertation architectures",
+    stage: "Building",
+    what: "Tuning the remaining graph-attention and LSTM variants against the SARIMA baseline across 3,219 US counties.",
+    whyItMatters:
+      "The result so far is that the simplest model wins, which is the more useful finding and the harder one to publish. Finishing it properly means giving the complex models a genuine chance to beat the baseline before concluding they do not.",
+    status: "In progress, supervised by Dr Tongxin Chen, submitting November 2026.",
+    tools: ["SARIMA", "XGBoost", "GAT-LSTM", "PyTorch"],
+  },
+];
+
 export interface WritingPost {
   title: string;
   teaser: string;
@@ -634,6 +718,119 @@ export const skillGroups: SkillGroup[] = [
   {
     title: "Applied AI",
     skills: ["Claude API / MCP", "RAG & Vector Search", "LLM Orchestration", "n8n Automation", "Statistical Testing"],
+  },
+];
+
+/** Tooling, with the reason attached.
+ *
+ *  A list of logos proves nothing. What a reader can actually assess is whether
+ *  a choice was made for a reason, and whether the person can name what they
+ *  gave up by making it. So every entry carries the alternative that was not
+ *  taken and why.
+ *
+ *  `notYet` is not a wish list. It is the set of tools a reader might
+ *  reasonably expect to see here and does not, with the real reason, so that
+ *  nothing on this page has to be walked back in an interview. */
+export interface ToolChoice {
+  tool: string;
+  /** Where it actually ran. */
+  usedOn: string;
+  /** The named alternative that lost. */
+  insteadOf: string;
+  /** Why, specifically. Not "it's faster". */
+  because: string;
+}
+
+export interface ToolGap {
+  tool: string;
+  /** The honest reason it has not been used, not an excuse. */
+  reason: string;
+}
+
+export const stackChoices: ToolChoice[] = [
+  {
+    tool: "In-memory cosine similarity",
+    usedOn: "Retrieval for the staffing portal's assistant",
+    insteadOf: "pgvector",
+    because:
+      "The self-hosted Postgres has no pgvector extension, and adding it means migrating a volume holding live worker documents. The corpus is a few hundred chunks of 768 numbers, so scoring every one is under a millisecond and is dwarfed by the embedding call that produced the query. pgvector is the right answer at tens of thousands of chunks. This is not that.",
+  },
+  {
+    tool: "768-dimension embeddings",
+    usedOn: "The same retrieval pipeline",
+    insteadOf: "The model's native 3,072",
+    because:
+      "Every vector is read into memory in full on every question. At 3,072 that is four times the bytes and four times the multiplications, for a quality difference that a corpus of ninety chunks from one small website cannot measure. Truncating also means the vectors need normalising by hand, except that cosine similarity already divides by both lengths, so it cancels. Anyone swapping cosine for a raw dot product has to add that normalisation back in the same commit.",
+  },
+  {
+    tool: "Asymmetric embedding, query and document",
+    usedOn: "The same retrieval pipeline",
+    insteadOf: "Embedding both sides identically",
+    because:
+      "A passage that answers a question rarely looks like the question. 'How much notice do I need to give?' and 'Shifts must be cancelled at least 24 hours before the start time' share almost no words. Telling the model which side it is embedding puts the two in the same region. Without it the relevance floor has to sit so low that it stops excluding anything.",
+  },
+  {
+    tool: "Three LLM providers",
+    usedOn: "NexaHeat FX",
+    insteadOf: "One provider",
+    because:
+      "Claude, Groq and Gemini all generate the commentary, so a single vendor outage or rate limit does not take the product down. On a live market feed, rate limits and malformed payloads are ordinary operating conditions rather than edge cases.",
+  },
+  {
+    tool: "Railway",
+    usedOn: "This site, the staffing portal, and a self-hosted n8n",
+    insteadOf: "AWS or GCP",
+    because:
+      "One person maintaining three services does not need IAM policies and a VPC to get a container onto the internet. The trade is real and I can name it: the platform decides my runtime, which is exactly why containerising it myself is on the Next up list above.",
+  },
+  {
+    tool: "Isolation Forest",
+    usedOn: "Anomaly detection under distribution shift",
+    insteadOf: "Random Forest",
+    because:
+      "The Random Forest scored a perfect 1.0000 under random cross-validation and then caught 5.1% of genuinely unseen attacks once held to the 1% false-positive budget it was calibrated for. The Isolation Forest, which loses badly on the headline benchmark, caught 33.2%. Picking the better leaderboard number would have been the wrong call by a factor of six.",
+  },
+  {
+    tool: "SARIMA",
+    usedOn: "County-level forecasting across 3,219 US counties",
+    insteadOf: "GAT-LSTM",
+    because:
+      "The graph models encode mobility flows between counties and should win. So far they do not: SARIMA leads at R squared 0.745. The extra structure has not yet paid for itself, and reporting that is more useful than tuning the complex model until it agrees with the hypothesis.",
+  },
+  {
+    tool: "Precision and cross-validated recall",
+    usedOn: "Predictive maintenance on 10,000 machine records",
+    insteadOf: "Accuracy",
+    because:
+      "Only 3.39% of the machines actually fail. A model that predicts 'no failure' every single time scores 96.6% accuracy and is worth nothing. The base rate decides which metric is allowed to be the headline.",
+  },
+];
+
+export const stackGaps: ToolGap[] = [
+  {
+    tool: "Docker",
+    reason:
+      "Not used yet. Everything I run is containerised by a platform build system on my behalf, which means I cannot reproduce production locally. First item on the list to close.",
+  },
+  {
+    tool: "Kubernetes",
+    reason:
+      "Not used, and not needed yet. It solves orchestration across many services and many nodes. I run three services that each fit on one. Reaching for it now would be a line on a CV rather than a solution to a problem I have.",
+  },
+  {
+    tool: "Airflow or Dagster",
+    reason:
+      "Not used. My pipelines are notebooks and scripts run on demand, not scheduled DAGs with retries and backfills. The day one of them needs to run nightly and recover from a partial failure is the day this earns its place.",
+  },
+  {
+    tool: "MLflow or Weights & Biases",
+    reason:
+      "Not used. Experiment tracking so far has been notebooks and written notes, which is workable for a seven-model benchmark by one person and stops being workable the moment a second person needs to reproduce a run.",
+  },
+  {
+    tool: "pgvector",
+    reason:
+      "Deliberately not used, for the reason given above. Listed here so the absence reads as a decision rather than an oversight.",
   },
 ];
 
