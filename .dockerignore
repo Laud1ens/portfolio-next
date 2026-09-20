@@ -29,3 +29,7 @@ README.md
 
 Dockerfile
 .dockerignore
+
+# The Python architecture map is a reading and checking tool, not runtime.
+# It never executes in the container and the image has no Python in it.
+architecture
