@@ -9,39 +9,54 @@ const DESCRIPTION =
   "MSc Data Science & AI candidate building forecasting, optimisation and deep learning pipelines that end in a decision, not just a metric.";
 
 /**
- * Open Graph and Twitter cards were missing entirely, which mattered more than
- * it sounds: this link's main route to a reader is being pasted into LinkedIn,
- * a recruiter's email, or a message. Without these it previewed as a bare URL
- * with no title, no summary and no image, which reads as a dead link.
+ * Open Graph and Twitter cards. This link's main route to a reader is being
+ * pasted into LinkedIn, a recruiter's email or a message, so the preview is
+ * often read before the page is.
  *
- * The evolution still is used as the card image rather than the headshot. It
- * is already close to the 1.91:1 ratio the platforms crop to, and it shows the
- * work rather than the face.
+ * No `images` array here on purpose. `app/opengraph-image.tsx` and
+ * `app/twitter-image.tsx` supply them by file convention, and an entry in this
+ * object would override both. See the comment in opengraph-image.tsx for why
+ * the evolution poster stopped being the card: at 1440x607 it is 2.37:1 and
+ * every large card crops to 1.91:1, taking the crop off the two ends that
+ * carry the whole illustration.
+ *
+ * `title.template` exists so any future page can set a short title and still
+ * get the full one in a tab and a preview, rather than each page having to
+ * remember to repeat the name.
  */
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
-  title: TITLE,
+  title: { default: TITLE, template: "%s · Laud Asante" },
   description: DESCRIPTION,
+  applicationName: "Laud Asante",
+  authors: [{ name: "Laud Asante", url: SITE }],
+  creator: "Laud Asante",
+  // The canonical URL matters more than usual here: Railway also serves this
+  // app on its internal deployment hostnames, and without this a crawler that
+  // reaches one of those indexes a duplicate that nobody links to.
+  alternates: { canonical: "/" },
   openGraph: {
-    type: "website",
+    type: "profile",
+    firstName: "Laud",
+    lastName: "Asante",
     url: SITE,
     siteName: "Laud Asante",
+    locale: "en_GB",
     title: TITLE,
     description: DESCRIPTION,
-    images: [
-      {
-        url: "/evolution-poster.jpg",
-        width: 1440,
-        height: 607,
-        alt: "Four stages side by side: a crawling infant, a walking toddler, a boy traced with circuitry, and a machine sprinting under speed lines",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: TITLE,
     description: DESCRIPTION,
-    images: ["/evolution-poster.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    // Recruiters find this through search as often as through a pasted link,
+    // so the defaults that let Google show a longer snippet and a large image
+    // are worth setting rather than inheriting.
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
   },
 };
 
