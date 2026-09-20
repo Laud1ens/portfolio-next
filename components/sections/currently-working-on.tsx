@@ -5,8 +5,13 @@ import { currentlyWorkingOn, type WipStage } from "@/lib/content";
  *  "Next up" is deliberately the quietest of the three. Those entries are gaps
  *  rather than achievements, and styling them like the others would make the
  *  section read as six things in progress when it is really four in progress
- *  and two admissions. */
-const STAGE_STYLES: Record<WipStage, string> = {
+ *  and two admissions.
+ *
+ *  Exported because the Stack section marks its learning list with the same
+ *  three stages. Two copies would drift, and the moment "Next up" looks like
+ *  "Building" in one place and not the other, the labels stop being read as
+ *  meaning anything. */
+export const STAGE_STYLES: Record<WipStage, string> = {
   Building: "border-rust/50 bg-rust/10 text-rust",
   Scoping: "border-taupe/60 bg-taupe/15 text-brown",
   "Next up": "border-brown-deep/20 bg-transparent text-brown/70",
@@ -23,9 +28,10 @@ export function CurrentlyWorkingOn() {
           What I&apos;m building now, and what I haven&apos;t started yet
         </h2>
         <p className="mt-2 max-w-2xl text-brown">
-          The finished work is above. This is the in-flight half, including the gaps
-          I know about. Anything marked <em>Next up</em> has not been started, and is
-          listed rather than left off on purpose.
+          The finished work is above. This is the in-flight half: what I am building,
+          the tools it is teaching me, and the outcome that would count as done.
+          Anything marked <em>Next up</em> has not been started, and is listed rather
+          than left off on purpose.
         </p>
       </div>
 
@@ -53,6 +59,11 @@ export function CurrentlyWorkingOn() {
               <p className="mt-1 text-[0.88rem] leading-relaxed text-brown/90">
                 {item.whyItMatters}
               </p>
+            </div>
+
+            <div className="mt-3">
+              <Label>What I&apos;m aiming for</Label>
+              <p className="mt-1 text-[0.88rem] leading-relaxed text-brown/90">{item.aiming}</p>
             </div>
 
             <div className="mt-3">

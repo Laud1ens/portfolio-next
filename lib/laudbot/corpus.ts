@@ -7,7 +7,7 @@ import {
   projects,
   skillGroups,
   stackChoices,
-  stackGaps,
+  stackLearning,
   writing,
 } from "@/lib/content";
 
@@ -105,6 +105,7 @@ export function buildCorpus(): string {
           `### ${w.title} [${w.stage}]`,
           `What: ${w.what}`,
           `Why it matters: ${w.whyItMatters}`,
+          `What he is aiming for: ${w.aiming}`,
           `Current status: ${w.status}`,
           w.tools ? `Tools: ${w.tools.join(", ")}` : "",
         ]
@@ -124,8 +125,16 @@ export function buildCorpus(): string {
         (c) => `${c.tool} over ${c.insteadOf}, used on ${c.usedOn}. Reason: ${c.because}`,
       ),
       "",
-      "Tools he has NOT used. Never claim he has used these:",
-      ...stackGaps.map((g) => `${g.tool}: ${g.reason}`),
+      // The heading here is deliberately blunter than the one on the page. The
+      // site says "Still learning, and how", which is accurate for a reader who
+      // can see the stage label next to it. A model reading a flat list of
+      // strings has no such cue, and "learning Kubernetes" is one paraphrase
+      // away from "works with Kubernetes". The instruction has to carry the
+      // constraint that the layout carries visually.
+      "Tools he is STILL LEARNING and has NOT shipped anything with. Never say he has used, worked with, or has experience in these. If asked, say plainly that he has not used it, then say what he is doing about it:",
+      ...stackLearning.map(
+        (l) => `${l.tool} [${l.stage}]: Currently doing: ${l.doing} What would prove it: ${l.proof}`,
+      ),
     ].join("\n"),
   );
 

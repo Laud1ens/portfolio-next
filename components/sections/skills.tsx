@@ -1,14 +1,21 @@
-import { skillGroups, stackChoices, stackGaps } from "@/lib/content";
+import { skillGroups, stackChoices, stackLearning } from "@/lib/content";
 import { Badge } from "@/components/ui/badge";
+import { STAGE_STYLES } from "@/components/sections/currently-working-on";
 
 /**
- * Toolkit, then the reasoning, then the gaps.
+ * Toolkit, then the reasoning, then the learning.
  *
  * The badge grid on its own was the weakest section on the site: a list of
  * names anyone can type. It stays because it is genuinely useful for a reader
  * skimming for a keyword, but it is now the short preamble to the part that
  * carries the actual signal, which is why each thing was picked over the
- * obvious alternative and what has deliberately not been picked at all.
+ * obvious alternative.
+ *
+ * The third layer used to be headed "Not used yet, and why". The reframe to
+ * work in progress is not a softening: every entry still names what has not
+ * been proven, and each one now also carries the specific thing being built
+ * and the outcome that would settle it. A reader can check those. "Familiar
+ * with" cannot be checked, which is exactly why it is worth nothing.
  */
 export function Skills() {
   return (
@@ -20,8 +27,8 @@ export function Skills() {
         </h2>
         <p className="mt-2 max-w-2xl text-brown">
           A list of tools proves very little. What follows each one is the alternative
-          I turned down and the reason, plus an honest list of the things I have not
-          used at all.
+          I turned down and the reason, then the tools I am still learning, with what
+          I am building with each and what would count as having learned it.
         </p>
       </div>
 
@@ -69,13 +76,29 @@ export function Skills() {
 
       {/* The part most portfolios leave out. */}
       <h3 className="mt-12 font-label text-[0.7rem] uppercase tracking-[0.16em] text-rust">
-        Not used yet, and why
+        Still learning, and how
       </h3>
       <ul className="mt-4 divide-y divide-brown-deep/10 rounded-xl border border-brown-deep/10 bg-paper">
-        {stackGaps.map((g) => (
-          <li key={g.tool} className="grid grid-cols-1 gap-1 p-4 md:grid-cols-[180px_1fr] md:gap-5">
-            <span className="font-mono text-[0.82rem] font-medium text-brown-deep">{g.tool}</span>
-            <span className="text-[0.86rem] leading-relaxed text-brown">{g.reason}</span>
+        {stackLearning.map((l) => (
+          <li key={l.tool} className="grid grid-cols-1 gap-2 p-4 md:grid-cols-[180px_1fr] md:gap-5">
+            <div className="flex items-center gap-2 md:flex-col md:items-start md:gap-1.5">
+              <span className="font-mono text-[0.82rem] font-medium text-brown-deep">{l.tool}</span>
+              <span
+                className={`shrink-0 rounded-full border px-2 py-0.5 font-label text-[0.6rem] uppercase tracking-wider ${STAGE_STYLES[l.stage]}`}
+              >
+                {l.stage}
+              </span>
+            </div>
+            <div>
+              <p className="text-[0.86rem] leading-relaxed text-brown">{l.doing}</p>
+              <p className="mt-2 text-[0.86rem] leading-relaxed text-brown/80">
+                <span className="font-label text-[0.62rem] uppercase tracking-[0.16em] text-rust">
+                  What would prove it
+                </span>
+                <br />
+                {l.proof}
+              </p>
+            </div>
           </li>
         ))}
       </ul>
