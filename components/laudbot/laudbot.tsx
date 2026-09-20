@@ -26,8 +26,15 @@ interface Message {
   flagged?: { category: string; question: string };
 }
 
+/** The first thing anyone reads, so it does the introducing rather than
+ *  waiting to be asked.
+ *
+ *  It is one message, not three. An assistant that opens with a wall is one
+ *  people close, and the 24/7 line has to earn its place by being short: the
+ *  useful fact is that nobody is waiting on Laud's inbox to get an answer
+ *  about his work, not that the server has uptime. */
 const GREETING =
-  "Hello. I'm Laudbot. I know Laud's projects inside out, including the two where his hypothesis turned out to be wrong, which are the interesting ones. Ask me anything, and tell me if you want it in plain English or in full technical detail.";
+  "Hi, I'm Laudbot. Think of me as Laud with the sleep schedule taken out: I'm here at 3am, on a Sunday, whenever you happen to be reading this. I know his work about as well as he does, because he's the one who wrote all of it into me. What can I help you with?";
 
 const SUGGESTIONS = [
   "Explain a project like I'm not technical",
@@ -35,6 +42,22 @@ const SUGGESTIONS = [
   "Has he used Docker or Kubernetes?",
   "Why Isolation Forest over Random Forest?",
 ];
+
+/** The LB monogram, used on the launcher and in the panel header.
+ *
+ *  Same mark in both places on purpose. The launcher is what someone clicks
+ *  and the header is what they see for the rest of the conversation, so a
+ *  different treatment in each would read as two different things. */
+function Monogram({ className = "" }: { className?: string }) {
+  return (
+    <span
+      aria-hidden
+      className={`grid shrink-0 place-items-center rounded-xl bg-rust font-display font-semibold leading-none tracking-tight text-paper ${className}`}
+    >
+      LB
+    </span>
+  );
+}
 
 export function Laudbot() {
   const [open, setOpen] = useState(false);
@@ -165,19 +188,31 @@ export function Laudbot() {
   return (
     <>
       {/* Launcher. Hidden while the panel is open so it cannot sit on top of
-          its own close button on a small screen. */}
+          its own close button on a small screen.
+
+          A horizontal card rather than the usual circular bubble. A bare
+          circle has to be recognised before it can be clicked, and a mark
+          nobody has seen before is not recognisable, so it gets ignored as
+          decoration. Putting the monogram next to words that say what it does
+          means the first read is free. */}
       {!open && (
         <button
           type="button"
           onClick={() => setOpen(true)}
-          aria-label="Open Laudbot, the chat assistant for this portfolio"
-          className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 rounded-full bg-brown-deep px-5 py-3.5 font-label text-sm font-medium text-paper shadow-[0_10px_30px_-8px_rgba(58,42,29,0.55)] transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rust motion-reduce:transition-none"
+          aria-label="Open Laudbot, the chat assistant for this portfolio. Available any time."
+          className="group fixed bottom-5 right-5 z-50 flex items-center gap-3 rounded-2xl border border-paper/10 bg-brown-deep py-2.5 pl-2.5 pr-4 text-left shadow-[0_12px_34px_-10px_rgba(58,42,29,0.6)] transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rust motion-reduce:transition-none"
         >
-          <span aria-hidden className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rust opacity-70 motion-reduce:animate-none" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-rust" />
+          <Monogram className="h-9 w-9 text-[0.95rem]" />
+          <span className="min-w-0">
+            <span className="block font-label text-sm font-medium text-paper">Ask Laudbot</span>
+            <span className="mt-0.5 flex items-center gap-1.5 font-label text-[0.66rem] uppercase tracking-wider text-paper/60">
+              <span aria-hidden className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rust opacity-70 motion-reduce:animate-none" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-rust" />
+              </span>
+              Awake 24/7
+            </span>
           </span>
-          Ask Laudbot
         </button>
       )}
 
@@ -190,11 +225,16 @@ export function Laudbot() {
           className="fixed inset-0 z-50 flex flex-col bg-paper shadow-2xl sm:inset-auto sm:bottom-5 sm:right-5 sm:h-[min(620px,calc(100vh-2.5rem))] sm:w-[400px] sm:rounded-2xl sm:border sm:border-brown-deep/15"
         >
           <header className="flex shrink-0 items-center justify-between gap-3 border-b border-brown-deep/10 px-4 py-3">
-            <div className="min-w-0">
-              <p className="font-display text-base font-semibold text-brown-deep">Laudbot</p>
-              <p className="truncate font-label text-[0.68rem] uppercase tracking-wider text-brown/60">
-                Answers from Laud&apos;s work only
-              </p>
+            <div className="flex min-w-0 items-center gap-2.5">
+              <Monogram className="h-8 w-8 text-[0.85rem]" />
+              <div className="min-w-0">
+                <p className="font-display text-base font-semibold leading-tight text-brown-deep">
+                  Laudbot
+                </p>
+                <p className="truncate font-label text-[0.68rem] uppercase tracking-wider text-brown/60">
+                  Awake 24/7 · Answers from Laud&apos;s work only
+                </p>
+              </div>
             </div>
             <button
               type="button"
