@@ -1,0 +1,31 @@
+# Everything here is excluded from the build context, which is the tree Docker
+# uploads to the daemon before the first instruction runs. node_modules alone
+# is several hundred megabytes and is rebuilt inside the image anyway, so
+# leaving it in costs upload time on every single build for no gain.
+
+node_modules
+.next
+.git
+.gitignore
+
+# Never in the context. A secret copied into any layer stays in that layer even
+# if a later instruction deletes it, and anyone who can pull the image can read
+# it back out.
+.env
+.env.*
+
+npm-debug.log*
+yarn-error.log*
+*.tsbuildinfo
+
+# Docs and agent notes are for people working on the repository, not for the
+# running server.
+docs
+.claude
+.superpowers
+AGENTS.md
+CLAUDE.md
+README.md
+
+Dockerfile
+.dockerignore
