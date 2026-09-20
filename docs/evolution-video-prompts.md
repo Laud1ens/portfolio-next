@@ -27,7 +27,7 @@ Checked September 2026.
 
 | Tool | Free tier | Watermark | Verdict |
 |---|---|---|---|
-| **Hailuo (MiniMax)** | Daily refreshing credits, no cap | **None** | **Use this one** |
+| **Hailuo (MiniMax)** | Daily refreshing credits | Reported none, verify | **Use this one** |
 | Luma Dream Machine | Daily generations, 720p | Yes | Use only for the keyframe trick below |
 | Kling | 66 credits/day, the most generous | Yes | Good quality, watermark rules it out |
 | Google Veo 3 | Effectively paid, about $20/month | None | Not worth it for one clip |
@@ -35,6 +35,29 @@ Checked September 2026.
 A watermark in the middle of a portfolio page reads as "made with a free trial",
 which undercuts the exact impression the section exists to create. That single
 consideration outranks small quality differences, so Hailuo is the pick.
+
+**Check the watermark before you spend time on the prompt.** Hailuo's free tier
+is widely reported to export without one, and that is the entire reason it is
+top of this table, but their own site does not state it anywhere public and free
+tiers change without notice. Generate one throwaway clip, export it, and look at
+the corner. If it has a watermark, the table above collapses to "none of these",
+and the honest options become paying for Veo for a single clip or keeping the
+hand-animated webm that is already shipping.
+
+### Registering
+
+Sign up at **https://hailuoai.video/**, which is the official MiniMax product.
+Sign in with Google or Apple; there is no separate password to set.
+
+Be careful with the search results for this one. `hailuoaiminimax.com`,
+`minimaxaivideo.com` and `ai-hailuo.com` all rank highly, all look plausible,
+and none of them are it. They are third-party resellers wrapping the same model
+with their own accounts and limits. Type the domain rather than following a
+search link.
+
+The current model is MiniMax H3, which does 5 to 15 seconds with native audio.
+Audio is irrelevant here since the element is muted and looping, so ignore that
+half of the feature and keep to the 4 to 6 seconds specified below.
 
 ## Specification
 
