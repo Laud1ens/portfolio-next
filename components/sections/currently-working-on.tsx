@@ -1,4 +1,5 @@
 import { currentlyWorkingOn, type WipStage } from "@/lib/content";
+import { Disclosure } from "@/components/ui/disclosure";
 
 /** Stage colours carry meaning, so they are not decorative.
  *
@@ -19,70 +20,70 @@ export const STAGE_STYLES: Record<WipStage, string> = {
 
 export function CurrentlyWorkingOn() {
   return (
-    <section id="now" className="py-20">
-      <div className="mb-10">
+    <section id="now" className="py-14">
+      <div className="mb-6">
         <span className="font-label text-sm uppercase tracking-wider text-rust">
           {"// Currently working on"}
         </span>
         <h2 className="mt-2 font-display text-3xl font-semibold text-brown-deep md:text-4xl">
           What I&apos;m building now, and what I haven&apos;t started yet
         </h2>
-        <p className="mt-2 max-w-2xl text-brown">
-          The finished work is above. This is the in-flight half: what I am building,
-          the tools it is teaching me, and the outcome that would count as done.
-          Anything marked <em>Next up</em> has not been started, and is listed rather
-          than left off on purpose.
+        <p className="mt-2 max-w-2xl text-[0.92rem] text-brown">
+          Open any one for why it matters, what would count as done, and where it
+          honestly stands. Anything marked <em>Next up</em> has not been started, and is
+          listed rather than left off on purpose.
         </p>
       </div>
 
-      <ol className="grid grid-cols-1 gap-5 md:grid-cols-2">
+      <ol className="grid grid-cols-1 gap-x-8 md:grid-cols-2">
         {currentlyWorkingOn.map((item) => (
-          <li
-            key={item.title}
-            className="flex flex-col rounded-xl border border-brown-deep/10 bg-cream p-5"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <h3 className="font-display text-lg font-semibold leading-snug text-brown-deep">
-                {item.title}
-              </h3>
-              <span
-                className={`shrink-0 rounded-full border px-2.5 py-0.5 font-label text-[0.65rem] uppercase tracking-wider ${STAGE_STYLES[item.stage]}`}
-              >
-                {item.stage}
-              </span>
-            </div>
-
-            <p className="mt-2.5 text-[0.92rem] leading-relaxed text-brown">{item.what}</p>
-
-            <div className="mt-4 border-t border-brown-deep/10 pt-3">
-              <Label>Why it matters</Label>
-              <p className="mt-1 text-[0.88rem] leading-relaxed text-brown/90">
-                {item.whyItMatters}
-              </p>
-            </div>
-
-            <div className="mt-3">
-              <Label>What I&apos;m aiming for</Label>
-              <p className="mt-1 text-[0.88rem] leading-relaxed text-brown/90">{item.aiming}</p>
-            </div>
-
-            <div className="mt-3">
-              <Label>Where it stands</Label>
-              <p className="mt-1 text-[0.88rem] leading-relaxed text-brown/90">{item.status}</p>
-            </div>
-
-            {item.tools && item.tools.length > 0 && (
-              <ul className="mt-4 flex flex-wrap gap-1.5 pt-1">
-                {item.tools.map((t) => (
-                  <li
-                    key={t}
-                    className="rounded bg-paper px-2 py-1 font-mono text-[0.7rem] text-brown/75"
+          <li key={item.title} className="border-t border-brown-deep/10">
+            <Disclosure
+              summary={
+                <span className="flex flex-wrap items-center gap-2">
+                  <span
+                    className={`shrink-0 rounded-full border px-2 py-0.5 font-label text-[0.6rem] uppercase tracking-wider ${STAGE_STYLES[item.stage]}`}
                   >
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            )}
+                    {item.stage}
+                  </span>
+                  <span className="font-display text-[0.95rem] font-semibold leading-snug text-brown-deep">
+                    {item.title}
+                  </span>
+                </span>
+              }
+            >
+              <p className="text-[0.88rem] leading-relaxed text-brown">{item.what}</p>
+
+              <div className="mt-3">
+                <Label>Why it matters</Label>
+                <p className="mt-1 text-[0.85rem] leading-relaxed text-brown/90">
+                  {item.whyItMatters}
+                </p>
+              </div>
+
+              <div className="mt-3">
+                <Label>What I&apos;m aiming for</Label>
+                <p className="mt-1 text-[0.85rem] leading-relaxed text-brown/90">{item.aiming}</p>
+              </div>
+
+              <div className="mt-3">
+                <Label>Where it stands</Label>
+                <p className="mt-1 text-[0.85rem] leading-relaxed text-brown/90">{item.status}</p>
+              </div>
+
+              {item.tools && item.tools.length > 0 && (
+                <ul className="mt-3 flex flex-wrap gap-1.5">
+                  {item.tools.map((t) => (
+                    <li
+                      key={t}
+                      className="rounded bg-paper px-2 py-1 font-mono text-[0.68rem] text-brown/75"
+                    >
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </Disclosure>
           </li>
         ))}
       </ol>

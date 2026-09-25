@@ -1,9 +1,13 @@
+/** Order mirrors the page, and every href has a section to land on.
+ *
+ *  "#about" was left here after the About section was folded into the hero,
+ *  which is the quietest kind of broken: the link still works, it just scrolls
+ *  to nothing and the reader assumes they missed it. */
 const navLinks = [
-  { href: "#about", label: "About" },
-  { href: "#experience", label: "Experience" },
+  { href: "#writing", label: "Plain English" },
   { href: "#projects", label: "Projects" },
+  { href: "#experience", label: "Experience" },
   { href: "#now", label: "Now" },
-  { href: "#writing", label: "Writing" },
   { href: "#stack", label: "Stack" },
   { href: "#contact", label: "Contact" },
 ];

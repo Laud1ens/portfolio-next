@@ -11,7 +11,7 @@ export function Hero() {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section className="grid grid-cols-1 items-center gap-12 pb-16 pt-44 md:grid-cols-[1.15fr_0.85fr]">
+    <section className="grid grid-cols-1 items-center gap-10 pb-12 pt-32 md:grid-cols-[1.2fr_0.8fr]">
       <div>
         <span className="mb-4 block font-label text-sm font-semibold uppercase tracking-[0.22em] text-rust">
           {hero.kicker}
@@ -20,8 +20,11 @@ export function Hero() {
           {hero.headline}
           <em className="text-rust not-italic md:italic">{hero.headlineEmphasis}</em>.
         </h1>
-        <p className="mb-8 max-w-xl text-lg leading-relaxed text-brown">{hero.lede}</p>
-        <div className="mb-10 flex flex-wrap items-center gap-3">
+        <p className="mb-4 max-w-xl text-[1.02rem] leading-relaxed text-brown">{hero.lede}</p>
+        <p className="mb-7 max-w-xl border-l-2 border-rust/30 pl-4 text-[0.92rem] leading-relaxed text-brown/80">
+          {hero.bridge}
+        </p>
+        <div className="mb-8 flex flex-wrap items-center gap-3">
           {hero.ctas.map((cta) => (
             <span key={cta.href} className="inline-flex items-center gap-2">
               <Button

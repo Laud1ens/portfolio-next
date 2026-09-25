@@ -2,11 +2,11 @@ import { contact } from "@/lib/content";
 
 export function Contact() {
   return (
-    <footer id="contact" className="bg-brown-deep py-20 text-paper">
+    <footer id="contact" className="bg-brown-deep py-14 text-paper">
       <div className="mx-auto max-w-[1080px] px-8">
         <h2 className="font-display text-3xl font-semibold md:text-4xl">{contact.heading}</h2>
-        <p className="mt-3 max-w-xl text-beige">{contact.blurb}</p>
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+        <p className="mt-2 max-w-xl text-[0.92rem] text-beige">{contact.blurb}</p>
+        <div className="mt-7 grid grid-cols-2 gap-5 md:grid-cols-4">
           {contact.items.map((item) => (
             <div key={item.label}>
               <div className="font-label text-xs uppercase tracking-wide text-taupe">
@@ -22,7 +22,7 @@ export function Contact() {
             </div>
           ))}
         </div>
-        <div className="mt-12 flex flex-wrap items-center gap-6 border-t border-paper/10 pt-6 font-label text-sm">
+        <div className="mt-8 flex flex-wrap items-center gap-5 border-t border-paper/10 pt-5 font-label text-sm">
           {contact.footerLinks.map((link) => (
             <span key={link.href} className="inline-flex items-center gap-1.5">
               <a href={link.href} target="_blank" rel="noopener noreferrer" className="hover:text-rust">
@@ -36,7 +36,7 @@ export function Contact() {
             </span>
           ))}
         </div>
-        <div className="mt-6 flex flex-wrap justify-between gap-2 font-mono text-xs text-taupe">
+        <div className="mt-4 flex flex-wrap justify-between gap-2 font-mono text-xs text-taupe">
           <span>© 2026 Laud Asante</span>
           <span>Built by hand · Hull, UK</span>
         </div>

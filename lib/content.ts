@@ -48,18 +48,32 @@ export const CV_REQUEST_MAILTO =
   "&body=" +
   encodeURIComponent(CV_REQUEST_BODY);
 
+/**
+ * The hero leads with a shipped system rather than a description of skills.
+ *
+ * The previous version opened with "forecasting, optimisation and deep
+ * learning, built to be acted on", which is a claim about a person. This opens
+ * with a thing that exists, the problem it was pointed at, what it runs on and
+ * what it costs to get wrong. A reader can verify all of it. `bridge` then
+ * hands off to the research work so one production build does not crowd out
+ * six pieces of evidence that this is a data scientist and not a web developer.
+ */
+export const LINKEDIN_URL = "https://www.linkedin.com/in/laud-asante-938382103/";
+
 export const hero = {
-  kicker: "Laud Asante · Data Science & AI",
-  headline: "Forecasting, optimisation and deep learning, ",
-  headlineEmphasis: "built to be acted on",
-  lede: "MSc Data Science & Artificial Intelligence student at the University of Hull. I build time-series forecasts, neural networks and optimisation pipelines, then translate the output into a decision a manager can actually use.",
+  kicker: "Laud Asante · Data Science & AI · Hull, UK",
+  headline: "A recruitment agency's whole operation, ",
+  headlineEmphasis: "in one login",
+  lede: "Staff Finders in Hull places temporary workers into warehouse, care and hospitality jobs, and the rules deciding who could take which shift lived in people's heads. I built the portal that writes them down, and shipped it: TypeScript and Postgres on Railway, 47 API routes, 445 automated tests. The rule that keeps a student inside their visa hour cap carries 35 of those tests on its own, because a wrong answer there costs somebody their right to remain in the country.",
+  bridge:
+    "That is the build that had to survive contact with real people. The projects below are the research behind it: forecasting, anomaly detection and deep learning, including the two where the honest finding was that I was wrong.",
   ctas: [
     { label: "Request CV ✉", href: CV_REQUEST_MAILTO, primary: true },
     { label: "GitHub ↗", href: "https://github.com/Laud1ens" },
-    { label: "LinkedIn ↗", href: "https://www.linkedin.com/in/laud-asante-938382103/", status: "in-progress" },
+    { label: "LinkedIn ↗", href: LINKEDIN_URL, status: "in-progress" },
   ] as LinkCta[],
   stats: [
-    { value: 0.745, decimals: 3, label: "SARIMA R², county forecast" },
+    { value: 0.887, decimals: 3, label: "R², county-level case forecast" },
     { value: 94.7, suffix: "%", decimals: 1, label: "Precision, machine-failure detection" },
     { value: 0.974, decimals: 3, label: "AUC-ROC, sarcasm detection" },
   ] as Stat[],
@@ -108,10 +122,14 @@ export const experience: ExperienceEntry[] = [
   {
     role: "Area Sales Manager",
     company: "Sweet Nutrition Limited",
-    period: "Jun 2022 – Oct 2025",
+    period: "Jun 2022 – Aug 2025",
     location: "Kumasi, Ghana",
+    // The "5 territories and 200+ accounts" that used to sit here were Sunda's
+    // Accra numbers, duplicated onto this role at some point. Removed rather
+    // than re-guessed: a figure attached to the wrong employer is the kind of
+    // thing that falls apart in the one interview you wanted to pass.
     description:
-      "Managed a defined sales territory to exceed targets. Developed and executed strategic sales plans, monitored market trends and competitor activity, and produced AI-assisted trend analysis and KPI dashboards for senior leadership across 5 territories and 200+ accounts.",
+      "Managed a defined sales territory to target, developed and executed the sales plans behind it, and tracked market and competitor movement. Produced AI-assisted trend analysis and KPI dashboards for senior leadership.",
   },
   {
     role: "Branch Sales Manager, Pharmaceuticals & FMCG",
@@ -125,17 +143,17 @@ export const experience: ExperienceEntry[] = [
     role: "Territory Sales Supervisor",
     company: "Sunda Invest Limited",
     period: "Sep 2019 – Apr 2021",
-    location: "Greater Accra, Ghana",
+    location: "Western Region, Ghana",
     description:
-      "Supervised a team of sales representatives across the Western & Central Market, analysing sales throughput data to identify territory-level efficiency gaps and optimise performance.",
+      "Promoted out of Accra into a second line of management: I supervised the Cape Coast, Takoradi, Tarkwa and Prestea managers rather than salesmen directly, and reached each distributor portfolio through the manager who held it. Analysed sales throughput across the four territories to separate gaps that were structural from gaps that were personal, then worked them through the managers rather than around them.",
   },
   {
     role: "Territory Sales Manager",
     company: "Sunda Invest Limited",
     period: "Mar 2018 – Aug 2019",
-    location: "Western Region, Ghana",
+    location: "Greater Accra, Ghana",
     description:
-      "Managed a designated sales territory, leading a team of four to exceed ambitious sales targets, and implemented market-penetration strategies to drive product adoption.",
+      "Supervised five key distributors running twenty van sales teams, each van staffed by a driver and a salesman, across more than 200 wholesalers and supermarkets from East Legon and Madina through Tema and Dawhenya, against a combined target of GHS 3 million a month. Built the daily Excel and Power BI reporting that the distributors, their sales teams and each individual van worked to: month-to-date volume, achievement by product category, and the commission each contract was on track to pay, issued ahead of head office's own figures. The weakest of the five was up 23.75% by my final month on it, and the top distributor earned 18.61% more in commission by buying against category targets it had previously ignored.",
   },
   {
     role: "Business Development & Training Coordinator",
@@ -208,6 +226,10 @@ export interface Project {
   outcome: string;
   impact: string;
   repoUrl?: string;
+  /** Why there is no public repo. Rendered in place of the link, so a closed
+   *  codebase reads as a decision rather than as a card somebody forgot to
+   *  finish. Leave unset whenever `repoUrl` is set. */
+  repoNote?: string;
   visual?: ProjectVisual;
   detail?: ProjectDetail;
 }
@@ -220,6 +242,7 @@ export const projects: Project[] = [
     what: "Built a production staffing platform end to end: a cascading shift-allocation engine, right-to-work document verification, a four-rank permission model, encrypted bank details and National Insurance numbers, and a multilingual in-app assistant that answers worker questions from the agency's own published policies with citations.",
     outcome: "29,310 lines of TypeScript and SQL across 233 files, 47 API routes, 20 database migrations and 445 automated tests, live on Railway. The hour-cap logic that decides how many hours a student visa holder may legally work has 35 tests of its own, because a wrong answer there is a legal problem for two parties rather than a bad rota.",
     impact: "the first system I have built where being wrong costs somebody their visa status or their wages rather than a point of accuracy, which is where I learned that most production ML fails for reasons that look like permissions and audit trails, not like a loss curve.",
+    repoNote: "Client codebase, private",
     detail: {
       kicker: "Still building, and saying so",
       headline: "A staffing agency runs on rules nobody wrote down. This is what happened when I wrote them down.",
@@ -335,49 +358,60 @@ export const projects: Project[] = [
   },
   {
     tag: "MSc Dissertation · University of Hull",
-    title: "US County-Level Forecasting: SARIMA vs XGBoost vs GAT-LSTM",
-    role: "Aug 2025 – Sep 2026 · Submitted and defended 1 Sep 2026 · Supervised by Dr. Tongxin Chen",
-    what: "Built a four-notebook, seven-model forecasting pipeline (SARIMA, SARIMAX, XGBoost, LSTM, GAT-LSTM variants) benchmarked across 3,219 US counties, engineering mobility-graph features from weekly flow data.",
-    outcome: "SARIMA led at R²=0.745, beating the more complex GAT-LSTM architectures built to outperform it. Submitted and defended on 1 September 2026, with results due in November.",
-    impact: "a defended, evidence-based case for choosing the simpler model that actually works over the more sophisticated one that doesn't, useful to any Data Science or ML Team Lead deciding where to spend model-complexity budget.",
+    title: "Does mobility data actually improve COVID-19 forecasting? Nine configurations, across 3,219 US counties",
+    role: "Submitted 17 Aug 2026 · Supervised by Dr. Tongxin Chen",
+    what: "Tested whether county-to-county human movement data improves weekly COVID-19 case prediction beyond a county's own recent history, across 3,219 US counties and 96 weeks. Nine configurations: four matched pairs differing only in whether mobility was supplied, plus a graph-attention arm consuming the flow network directly, scored on 57,942 common county-weeks.",
+    outcome: "It does not. Mobility was statistically indistinguishable from zero for XGBoost (p=0.926) and LSTM (p=0.553). The classical family appeared to lose 0.1894 in R², but that was an artefact of asking for a 52-week seasonal cycle from 55 weeks of training data: refit honestly, the loss was 0.0041, so 98% of my own headline finding turned out to be specification rather than data.",
+    impact: "a worked argument for testing a data source by matched ablation rather than by improvement over a naive benchmark, and for checking whether an effect you have attributed to data is really a property of the model carrying it, relevant to any team about to buy a feature stream on the strength of a benchmark.",
+    repoNote: "Private until results are released",
     detail: {
-      kicker: "Submitted and defended",
-      headline: "Seven models across 3,219 counties, and the simplest one won.",
-      intro: "The premise of most forecasting research is that more structure wins: give a model the graph of how people move between places and it should beat a model that only sees one county's own history. This dissertation tested that premise at national scale rather than assuming it, and the premise lost.",
+      kicker: "Submitted 17 August 2026",
+      headline: "The expensive data source did not help, and the evidence that it hurt was mostly my own model specification.",
+      intro: "Phone location data made human movement measurable at the same resolution as epidemic reporting, so mobility features went into COVID-19 forecasting almost everywhere. Whether they beat a county's own recent case history is tested much less often. This asks that question directly, with matched pairs that differ in one thing only, and the answer is no.",
       dataset: {
-        name: "US county-level COVID-19 case series with inter-county mobility",
-        source: "Public county case reporting, joined to weekly mobility flow data",
-        body: "Weekly case counts for every county in the contiguous United States, paired with a mobility graph whose edges are weekly flows between counties. The graph is what the GAT-LSTM architectures consume as neighbourhood structure. The classical models see only each county's own history, which is precisely the comparison that makes the benchmark meaningful.",
+        name: "US county COVID-19 cases, inter-county mobility flows, socioeconomic context",
+        source: "Johns Hopkins case counts, GeoDS weekly flow records, American Community Survey",
+        body: "Weekly case counts for 3,219 counties over 96 weeks from March 2020 to December 2021, joined to 55.6 million records of estimated county-to-county movement and twelve socioeconomic variables. Eight of the nine configurations are four matched pairs: identical model, identical tuning, the only difference being whether mobility features are supplied. The ninth consumes the flow network as an explicit graph. Matching is the whole design, because a comparison that changes two things at once cannot attribute the result to either.",
         facts: [
           { label: "US counties", value: "3,219" },
-          { label: "Models benchmarked", value: "7" },
-          { label: "Notebooks in pipeline", value: "4" },
-          { label: "Best R squared", value: "0.745" },
+          { label: "Mobility flow records", value: "55.6M" },
+          { label: "Configurations", value: "9" },
+          { label: "County-weeks scored", value: "57,942" },
         ],
       },
       sections: [
         {
-          heading: "The result, and it is not the expected one",
-          body: "SARIMA led on R squared at 0.745, ahead of the graph-attention and LSTM architectures built to beat it. The graph models encode mobility flows between counties, which should help. The added structure did not pay for itself against a well-specified classical model.",
-          stat: { value: "0.745", label: "SARIMA R squared, the winning model" },
+          heading: "What won, and by how little it mattered",
+          body: "XGBoost with mobility led at R squared 0.8872. XGBoost without mobility reached 0.8870. The two arms are separated by 0.0002, and a Diebold-Mariano test puts that at p = 0.926, which is another way of saying the mobility data bought nothing. The LSTM pair told the same story at p = 0.553. Accuracy also hides trouble: SARIMA looks respectable at 0.7641 on a log scale while its error in actual cases is 2,734 against 517 for the leader, because a fit that is fine in aggregate can still be badly wrong on the largest counties.",
+          stat: { value: "0.0002", label: "R squared gained from mobility, XGBoost, p = 0.926" },
         },
         {
-          heading: "Why that is worth writing up rather than fixing",
-          body: "The tempting move is to keep tuning the complex model until it wins. The more useful contribution is an honest benchmark showing where the extra complexity stops earning its keep, on real data, at national scale. A negative result that is properly controlled is more transferable than a positive one that was tuned into existence.",
+          heading: "The finding I had to take away from myself",
+          body: "The seasonal classical pair looked dramatic: supplying mobility cost 0.1894 in R squared, clearly significant. It was the most quotable number in the study and it was close to meaningless. A 52-week seasonal period cannot be identified from 55 weeks of training data, so the model was being asked for something the window could not support. Refitted without the seasonal term, the same comparison cost 0.0041. The sign held and the significance held, but 98 percent of the effect belonged to the specification, not to the data. Chasing that down cost weeks and removed my best headline.",
+          stat: { value: "98%", label: "Of the apparent mobility penalty was specification, not data" },
+        },
+        {
+          heading: "The graph arm, which was the interesting part of the hypothesis",
+          body: "If mobility is going to help anywhere, it should help most when represented as what it actually is, a directed weighted network. The graph-attention model reached 0.5593 against 0.8163 for an LSTM given the same mobility information as flat columns, a gap of 0.2570 in favour of the simpler representation. It was not a convergence failure: the best validation loss was roughly eighteen times the recurrent model's, so the shortfall is there during training. It also absorbed none of the spatial dependence it was introduced to capture. Moran's I on residuals was significant in all 18 test weeks for every configuration tested, including the graph one.",
+        },
+        {
+          heading: "Where the error lands",
+          body: "Aggregate accuracy says nothing about who the model is wrong about. Split by socioeconomic quartile, every configuration had unequal error, with disparity ratios from 1.15 to 2.10 and the widest gaps on income. The least accurate model was the most equal one, which is an uncomfortable trade to have to report and the reason it is reported here rather than left out.",
         },
         {
           heading: "Status",
-          body: "Submitted and defended on 1 September 2026, supervised by Dr Tongxin Chen, with results due in November. The numbers above are the ones I defended. The viva is where a negative result either holds up under questioning or falls apart, and this one held.",
+          body: "Submitted on 17 August 2026, supervised by Dr Tongxin Chen. Results are due later in the year. The numbers above come from the submitted report, not from an earlier draft, which matters because this study changed its own headline twice on the way through.",
         },
       ],
-      plainEnglish: "Imagine predicting how busy a shop will be next week. One method looks only at how busy that shop has been. Another also looks at traffic between all the surrounding towns, on the reasonable theory that people move around. The second method is far more sophisticated and much more expensive to build. Across more than three thousand areas, the simple method won. That is worth knowing before an organisation spends a year building the complicated one.",
+      plainEnglish: "Everyone assumed that knowing how much people travelled between areas would help predict where an outbreak went next. It is an expensive dataset and the reasoning is sensible. I tested it properly, by running the same models twice, once with the travel data and once without, changing nothing else. It made no useful difference. I also found something that made me uncomfortable: my own strongest evidence that the travel data was harmful was wrong, caused by a setting in my model rather than by the data itself. Finding that out cost me my best result. Reporting it anyway is the point.",
     },
     visual: {
       type: "comparisonBar",
-      headlineStat: { value: 0.745, decimals: 3, label: "SARIMA R², winning model" },
-      primary: { label: "XGBoost", value: 0.593 },
-      secondary: { label: "GAT-LSTM", value: -0.007 },
-      primaryCaption: "Earlier benchmark (R²)",
+      headlineStat: { value: 0.887, decimals: 3, label: "Best R², XGBoost with mobility" },
+      primary: { label: "LSTM, flat", value: 0.816 },
+      secondary: { label: "GAT-LSTM, graph", value: 0.559 },
+      primaryCaption: "Same mobility data, flat vs graph (R²)",
+      valueDecimals: 3,
     },
   },
   {
@@ -387,6 +421,7 @@ export const projects: Project[] = [
     what: "Designed and built a browser-based FX intelligence tool from scratch, integrating live market data (Twelve Data) with three LLM providers (Claude, Groq, Gemini) to generate real-time market commentary and signals.",
     outcome: "Shipped a working end-to-end product independently, now scoping a market-prediction layer starting with XGBoost and progressing toward a Temporal Fusion Transformer.",
     impact: "proof I can ship a working, multi-API AI product end-to-end, not just a notebook, relevant to Engineering & Product Managers hiring for applied AI roles.",
+    repoNote: "Private, holds live API keys",
     detail: {
       kicker: "Shipped, not notebooked",
       headline: "A working browser product wiring live market data to three separate LLM providers.",
@@ -692,7 +727,7 @@ export const currentlyWorkingOn: WipItem[] = [
     stage: "Scoping",
     what: "Putting runs, parameters, metrics and artefacts behind MLflow instead of notebook cells and filenames.",
     whyItMatters:
-      "Seven model variants across 3,219 counties were compared on figures I recorded by hand. The result held up in a viva, but the process would not survive a colleague asking which hyperparameters produced the 0.745. Reproducibility is the part of the work that makes a result usable by someone other than me.",
+      "Nine configurations across 3,219 counties were compared on figures I recorded by hand. The result held up in a viva, but the process would not survive a colleague asking which hyperparameters produced the 0.8872. It also let a headline number stand for weeks before I traced it back to a specification error rather than to the data. Reproducibility is the part of the work that catches that in days instead.",
     aiming:
       "Any number on this site traceable back to the exact run, commit and parameter set that produced it.",
     status:
@@ -706,7 +741,7 @@ export const currentlyWorkingOn: WipItem[] = [
     whyItMatters:
       "The platform currently explains what the market is doing. It does not forecast, and I have not pretended otherwise anywhere on this site. Adding a forecast means owning a backtest that can embarrass me, which is the right order to do it in.",
     aiming:
-      "A walk-forward backtest published whichever way it comes out, including the case where the baseline beats the transformer, which is exactly what happened in my dissertation.",
+      "A walk-forward backtest published whichever way it comes out, including the case where the simple baseline beats the expensive model. That is what happened in my dissertation, where the graph architecture lost to the same data in flat columns by 0.2570 in R squared.",
     status:
       "Scoping. No accuracy figure appears anywhere on this site, because no backtest has been run. The numbers go up when they exist.",
     tools: ["XGBoost", "Temporal Fusion Transformer", "Walk-forward validation"],
@@ -876,11 +911,11 @@ export const stackChoices: ToolChoice[] = [
       "The Random Forest scored a perfect 1.0000 under random cross-validation and then caught 5.1% of genuinely unseen attacks once held to the 1% false-positive budget it was calibrated for. The Isolation Forest, which loses badly on the headline benchmark, caught 33.2%. Picking the better leaderboard number would have been the wrong call by a factor of six.",
   },
   {
-    tool: "SARIMA",
+    tool: "Matched pairs and a Diebold-Mariano test",
     usedOn: "County-level forecasting across 3,219 US counties",
-    insteadOf: "GAT-LSTM",
+    insteadOf: "Improvement over a naive benchmark",
     because:
-      "The graph models encode mobility flows between counties and should win. They did not: SARIMA led at R squared 0.745. The extra structure did not pay for itself, and defending that result was more useful than tuning the complex model until it agreed with the hypothesis.",
+      "Mobility features beat a naive benchmark comfortably, which is the comparison most papers report and it proves nothing. Held against the identical model without them, they were worth 0.0002 in R squared at p = 0.926. The same discipline caught my own error later: 98 percent of the penalty I had attributed to mobility data turned out to belong to the model specification carrying it.",
   },
   {
     tool: "Precision and cross-validated recall",
@@ -912,7 +947,7 @@ export const stackLearning: ToolLearning[] = [
     tool: "MLflow",
     stage: "Scoping",
     doing:
-      "Working out how to put runs, parameters and artefacts behind a tracking server before the next set of experiments, rather than after. Seven model variants across 3,219 counties were compared on figures recorded by hand. That held up in a viva and would not survive a colleague asking which hyperparameters produced the 0.745.",
+      "Working out how to put runs, parameters and artefacts behind a tracking server before the next set of experiments, rather than after. Nine configurations across 3,219 counties were compared on figures recorded by hand. That held up in a viva and would not survive a colleague asking which hyperparameters produced the 0.8872.",
     proof:
       "Any number published on this site traceable back to the run, commit and parameter set that produced it. The honest trigger is the NexaHeat backtest, which will generate more runs than I can track by hand.",
   },

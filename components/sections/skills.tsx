@@ -1,6 +1,7 @@
 import { skillGroups, stackChoices, stackLearning } from "@/lib/content";
 import { Badge } from "@/components/ui/badge";
 import { STAGE_STYLES } from "@/components/sections/currently-working-on";
+import { Disclosure } from "@/components/ui/disclosure";
 
 /**
  * Toolkit, then the reasoning, then the learning.
@@ -19,16 +20,16 @@ import { STAGE_STYLES } from "@/components/sections/currently-working-on";
  */
 export function Skills() {
   return (
-    <section id="stack" className="py-20">
-      <div className="mb-8">
+    <section id="stack" className="py-14">
+      <div className="mb-6">
         <span className="font-label text-sm uppercase tracking-wider text-rust">{"// Stack"}</span>
         <h2 className="mt-2 font-display text-3xl font-semibold text-brown-deep md:text-4xl">
           What I reach for, and what I don&apos;t
         </h2>
-        <p className="mt-2 max-w-2xl text-brown">
-          A list of tools proves very little. What follows each one is the alternative
-          I turned down and the reason, then the tools I am still learning, with what
-          I am building with each and what would count as having learned it.
+        <p className="mt-2 max-w-2xl text-[0.92rem] text-brown">
+          A list of tools proves very little, so the two lists that do are underneath it:
+          the alternative I turned down for each choice, and the tools I am still
+          learning with what would count as having learned them.
         </p>
       </div>
 
@@ -55,10 +56,16 @@ export function Skills() {
       </div>
 
       {/* The layer that actually says something. */}
-      <h3 className="mt-12 font-label text-[0.7rem] uppercase tracking-[0.16em] text-rust">
-        Why this and not that
-      </h3>
-      <ul className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="mt-8 border-t border-brown-deep/10">
+        <Disclosure
+          hint={`${stackChoices.length} choices`}
+          summary={
+            <h3 className="font-label text-[0.7rem] uppercase tracking-[0.16em] text-rust">
+              Why this and not that
+            </h3>
+          }
+        >
+          <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {stackChoices.map((c) => (
           <li key={c.tool} className="rounded-xl border border-brown-deep/10 bg-cream p-4">
             <p className="font-display text-[0.98rem] font-semibold leading-snug text-brown-deep">
@@ -72,13 +79,21 @@ export function Skills() {
             <p className="mt-2.5 text-[0.86rem] leading-relaxed text-brown">{c.because}</p>
           </li>
         ))}
-      </ul>
+          </ul>
+        </Disclosure>
+      </div>
 
       {/* The part most portfolios leave out. */}
-      <h3 className="mt-12 font-label text-[0.7rem] uppercase tracking-[0.16em] text-rust">
-        Still learning, and how
-      </h3>
-      <ul className="mt-4 divide-y divide-brown-deep/10 rounded-xl border border-brown-deep/10 bg-paper">
+      <div className="border-t border-brown-deep/10">
+        <Disclosure
+          hint={`${stackLearning.length} tools`}
+          summary={
+            <h3 className="font-label text-[0.7rem] uppercase tracking-[0.16em] text-rust">
+              Still learning, and how
+            </h3>
+          }
+        >
+          <ul className="divide-y divide-brown-deep/10 rounded-xl border border-brown-deep/10 bg-paper">
         {stackLearning.map((l) => (
           <li key={l.tool} className="grid grid-cols-1 gap-2 p-4 md:grid-cols-[180px_1fr] md:gap-5">
             <div className="flex items-center gap-2 md:flex-col md:items-start md:gap-1.5">
@@ -101,7 +116,9 @@ export function Skills() {
             </div>
           </li>
         ))}
-      </ul>
+          </ul>
+        </Disclosure>
+      </div>
     </section>
   );
 }
