@@ -64,7 +64,11 @@ export const hero = {
   kicker: "Laud Asante · Data Science & AI · Hull, UK",
   headline: "A recruitment agency's whole operation, ",
   headlineEmphasis: "in one login",
-  lede: "Staff Finders in Hull places temporary workers into warehouse, care and hospitality jobs, and the rules deciding who could take which shift lived in people's heads. I built the portal that writes them down, and shipped it: TypeScript and Postgres on Railway, 47 API routes, 445 automated tests. The rule that keeps a student inside their visa hour cap carries 35 of those tests on its own, because a wrong answer there costs somebody their right to remain in the country.",
+  // The client is not named here, and will not be until they have agreed to it.
+  // Naming a company, its city and its internal compliance process on a public
+  // page is their disclosure to make, not mine. The engineering numbers below
+  // are my own work product and stay.
+  lede: "A UK recruitment agency places temporary workers into warehouse, care and hospitality jobs, and the rules deciding who could take which shift lived in people's heads. I built the portal that writes them down, and shipped it: TypeScript and Postgres on Railway, 47 API routes, 445 automated tests. The rule that keeps a student inside their visa hour cap carries 35 of those tests on its own, because a wrong answer there costs somebody their right to remain in the country.",
   bridge:
     "That is the build that had to survive contact with real people. The projects below are the research behind it: forecasting, anomaly detection and deep learning, including the two where the honest finding was that I was wrong.",
   ctas: [
@@ -236,8 +240,8 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    tag: "Production System · Staff Finders, Hull · In build",
-    title: "Staff Finders Portal: A Recruitment Agency's Whole Operation in One Login",
+    tag: "Production System · UK recruitment client · In build",
+    title: "Staffing Operations Portal: A Recruitment Agency's Whole Operation in One Login",
     role: "Solo build · deployed on Railway · roughly 75% of its own roadmap",
     what: "Built a production staffing platform end to end: a cascading shift-allocation engine, right-to-work document verification, a four-rank permission model, encrypted bank details and National Insurance numbers, and a multilingual in-app assistant that answers worker questions from the agency's own published policies with citations.",
     outcome: "29,310 lines of TypeScript and SQL across 233 files, 47 API routes, 20 database migrations and 445 automated tests, live on Railway. The hour-cap logic that decides how many hours a student visa holder may legally work has 35 tests of its own, because a wrong answer there is a legal problem for two parties rather than a bad rota.",
@@ -246,11 +250,11 @@ export const projects: Project[] = [
     detail: {
       kicker: "Still building, and saying so",
       headline: "A staffing agency runs on rules nobody wrote down. This is what happened when I wrote them down.",
-      intro: "Staff Finders is a recruitment agency in Hull placing temporary workers into warehouse, care and hospitality roles. The work of running it was spread across spreadsheets, phone calls and the memory of whoever had been there longest. This portal is one login that routes each person to the interface for their stage: agency admin, coordinator, a recruit mid-onboarding, or an active worker on the books. It is deployed and it is not finished, and the part that is unfinished is written down below rather than left for someone to discover.",
+      intro: "The client is a UK recruitment agency placing temporary workers into warehouse, care and hospitality roles. They are not named here, and will not be until they have said they are happy to be: how a company handles right-to-work checks is its disclosure to make rather than mine. The work of running it was spread across spreadsheets, phone calls and the memory of whoever had been there longest. This portal is one login that routes each person to the interface for their stage: agency admin, coordinator, a recruit mid-onboarding, or an active worker on the books. It is deployed and it is not finished, and the part that is unfinished is written down below rather than left for someone to discover.",
       dataset: {
         name: "The agency's own operation, plus 19 pages of its published site",
-        source: "staff-finders.co.uk, scraped into the assistant's knowledge base, and the agency's existing shift and compliance process",
-        body: "There is no public dataset here. The inputs are the agency's real working rules: which documents clear somebody to take a shift, how many hours a student visa holder may work in term time against a vacation, how a leaver's record is split between what must be deleted and what a statute requires be kept. The assistant's knowledge comes from a fixed list of 19 pages taken from the agency's own sitemap, chunked into roughly 93 passages. A crawl was deliberately rejected: it follows sixty pages of press releases, and a knowledge base that answers 'what does Staff Finders do' with a 2020 story about covid testing is worse than one that cannot answer at all.",
+        source: "The agency's own public website, pulled into the assistant's knowledge base, and its existing shift and compliance process",
+        body: "There is no public dataset here. The inputs are the agency's real working rules: which documents clear somebody to take a shift, how many hours a student visa holder may work in term time against a vacation, how a leaver's record is split between what must be deleted and what a statute requires be kept. The assistant's knowledge comes from a fixed list of 19 pages taken from the agency's own sitemap, chunked into roughly 93 passages. A crawl was deliberately rejected: it follows sixty pages of press releases, and a knowledge base that answers 'what does this agency do' with a 2020 story about covid testing is worse than one that cannot answer at all.",
         facts: [
           { label: "Lines of TypeScript and SQL", value: "29,310" },
           { label: "Automated tests", value: "445" },
