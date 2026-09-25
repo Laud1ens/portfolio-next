@@ -359,13 +359,13 @@ export const projects: Project[] = [
   {
     tag: "MSc Dissertation · University of Hull",
     title: "Does mobility data actually improve COVID-19 forecasting? Nine configurations, across 3,219 US counties",
-    role: "Submitted 17 Aug 2026 · Supervised by Dr. Tongxin Chen",
+    role: "Submitted 17 Aug 2026 · Defended 1 Sep 2026 · Supervised by Dr. Tongxin Chen",
     what: "Tested whether county-to-county human movement data improves weekly COVID-19 case prediction beyond a county's own recent history, across 3,219 US counties and 96 weeks. Nine configurations: four matched pairs differing only in whether mobility was supplied, plus a graph-attention arm consuming the flow network directly, scored on 57,942 common county-weeks.",
     outcome: "It does not. Mobility was statistically indistinguishable from zero for XGBoost (p=0.926) and LSTM (p=0.553). The classical family appeared to lose 0.1894 in R², but that was an artefact of asking for a 52-week seasonal cycle from 55 weeks of training data: refit honestly, the loss was 0.0041, so 98% of my own headline finding turned out to be specification rather than data.",
     impact: "a worked argument for testing a data source by matched ablation rather than by improvement over a naive benchmark, and for checking whether an effect you have attributed to data is really a property of the model carrying it, relevant to any team about to buy a feature stream on the strength of a benchmark.",
     repoNote: "Private until results are released",
     detail: {
-      kicker: "Submitted 17 August 2026",
+      kicker: "Submitted and defended",
       headline: "The expensive data source did not help, and the evidence that it hurt was mostly my own model specification.",
       intro: "Phone location data made human movement measurable at the same resolution as epidemic reporting, so mobility features went into COVID-19 forecasting almost everywhere. Whether they beat a county's own recent case history is tested much less often. This asks that question directly, with matched pairs that differ in one thing only, and the answer is no.",
       dataset: {
@@ -400,7 +400,7 @@ export const projects: Project[] = [
         },
         {
           heading: "Status",
-          body: "Submitted on 17 August 2026, supervised by Dr Tongxin Chen. Results are due later in the year. The numbers above come from the submitted report, not from an earlier draft, which matters because this study changed its own headline twice on the way through.",
+          body: "Submitted on 17 August 2026 and defended at viva on 1 September 2026, supervised by Dr Tongxin Chen, with results due later in the year. The numbers above come from the submitted report rather than from an earlier draft, which matters because this study changed its own headline twice on the way through. A null result is where a viva either holds or falls apart, particularly once you have told the room that your own strongest evidence was an artefact. It held.",
         },
       ],
       plainEnglish: "Everyone assumed that knowing how much people travelled between areas would help predict where an outbreak went next. It is an expensive dataset and the reasoning is sensible. I tested it properly, by running the same models twice, once with the travel data and once without, changing nothing else. It made no useful difference. I also found something that made me uncomfortable: my own strongest evidence that the travel data was harmful was wrong, caused by a setting in my model rather than by the data itself. Finding that out cost me my best result. Reporting it anyway is the point.",
