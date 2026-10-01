@@ -141,7 +141,7 @@ export const experience: ExperienceEntry[] = [
     period: "May 2021 – May 2022",
     location: "Cape Coast, Ghana",
     description:
-      "Led branch sales operations and product distribution across pharmaceutical and FMCG sectors, applying data-integrity and audit-trail standards directly analogous to production ML data governance.",
+      "Led branch sales operations and product distribution across pharmaceutical and FMCG sectors, applying data-integrity and audit-trail standards directly analogous to production ML data governance. Built and ran the weekly customer-performance tracker covering 180+ pharmacy, chemical-shop and clinic accounts across the Cape Coast and Central Region territory, logging each account's order activity against the week.",
   },
   {
     role: "Territory Sales Supervisor",
