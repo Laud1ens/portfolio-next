@@ -149,7 +149,7 @@ export const experience: ExperienceEntry[] = [
     period: "Sep 2019 – Apr 2021",
     location: "Western Region, Ghana",
     description:
-      "Promoted out of Accra into a second line of management: I supervised the Cape Coast, Takoradi, Tarkwa and Prestea managers rather than salesmen directly, and reached each distributor portfolio through the manager who held it. Analysed sales throughput across the four territories to separate gaps that were structural from gaps that were personal, then worked them through the managers rather than around them.",
+      "Promoted out of Accra into a second line of management, supervising the Cape Coast, Takoradi, Tarkwa and Prestea managers rather than salesmen directly — their combined distributor targets of about GHS 7 million became my secondary target as supervisor, on top of keeping the analytics role running and reporting from the new region. Hitting it meant analysing team, sales, distributor and customer/supermarket-audit performance across the four territories to separate gaps that were structural from gaps that were personal, then working them through the managers who held each portfolio rather than around them. Also worked with the marketing team on market-collected pricing data to help set consumer, retail and ex-factory prices across the range.",
   },
   {
     role: "Territory Sales Manager",
@@ -157,7 +157,7 @@ export const experience: ExperienceEntry[] = [
     period: "Mar 2018 – Aug 2019",
     location: "Greater Accra, Ghana",
     description:
-      "Supervised five key distributors running twenty van sales teams, each van staffed by a driver and a salesman, across more than 200 wholesalers and supermarkets from East Legon and Madina through Tema and Dawhenya, against a combined target of GHS 3 million a month. Built the daily Excel and Power BI reporting that the distributors, their sales teams and each individual van worked to: month-to-date volume, achievement by product category, and the commission each contract was on track to pay, issued ahead of head office's own figures. The weakest of the five was up 23.75% by my final month on it, and the top distributor earned 18.61% more in commission by buying against category targets it had previously ignored.",
+      "Directly managed five key distributor accounts — twenty van sales teams reaching 200+ wholesaler and sub-distributor accounts, 7 supermarkets and 3 online/modern-trade vendors, with every order from outside the five routed to whichever distributor covered that Accra location — against a combined target of GHS 3.2 million a month. My reporting work got me pulled into Sunda's analytics team alongside the TM role, and I moved to working remotely from there: ran the backoffice tracking each distributor's credit exposure and payment status, and built the daily Excel and Power BI reporting the distributors and their van teams worked to — month-to-date volume, achievement by product category, and the commission each contract was on track to pay. The weakest of the five was up 23.75% by my final month on it, and the top distributor earned 18.61% more in commission by buying against category targets it had previously ignored.",
   },
   {
     role: "Business Development & Training Coordinator",
@@ -619,6 +619,10 @@ export const projects: Project[] = [
         {
           heading: "The finding that needs no model at all",
           body: "Grouping tool wear into bands shows risk is flat across the first three, at 2.17%, 2.33% and 2.18%, then roughly triples to 6.06% once wear passes the critical threshold. Replacing tools slightly earlier buys almost nothing. Letting them run into that final band is where the risk actually sits. That is a maintenance decision available without deploying anything.",
+        },
+        {
+          heading: "A pattern that cuts against intuition",
+          body: "A chi-square test confirmed machine type predicts failure risk (χ² = 13.75, p = 0.001), and the direction ran counter to expectation: low-power machines failed more often than high-power ones, 3.9% against 2.1%. That's worth checking before the failure flag gets read as a simple hardware-quality signal.",
         },
         {
           heading: "A claim the project had to withdraw",
