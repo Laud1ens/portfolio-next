@@ -180,38 +180,24 @@ export interface DetailFigure {
   caption: string;
 }
 
-export interface DetailSection {
-  heading: string;
-  body: string;
-  /** Optional pulled-out number. Kept short: it renders large. */
-  stat?: { value: string; label: string };
-}
-
-/** A single hard fact about the source data, rendered as a small stat chip. */
-export interface DatasetFact {
-  label: string;
-  value: string;
-}
-
-/** Long-form expansion revealed on scroll. Every figure and number here is
- *  produced by the project's own code; nothing is illustrative. */
+/** Changed 8 Oct 2026, per Laud's instruction: four fixed questions instead of
+ *  a report with a dataset table, a findings grid and a plain-English
+ *  restatement. What I set out to build, how I thought about it, what I used,
+ *  what it found. Every number is still produced by the project's own code. */
 export interface ProjectDetail {
   kicker: string;
   headline: string;
-  /** One paragraph orienting the reader before any detail. */
-  intro: string;
-  /** Where the data came from and what is actually in it. */
-  dataset: {
-    name: string;
-    source: string;
-    body: string;
-    facts: DatasetFact[];
-  };
-  /** The findings themselves. */
-  sections: DetailSection[];
-  /** The same result explained without jargon. */
-  plainEnglish: string;
-  figures?: DetailFigure[];
+  /** What I set out to build. One or two sentences. */
+  built: string;
+  /** How I thought about it: the process, the design decision, the trap avoided. */
+  process: string;
+  /** Short tool/skill names, rendered as chips, not prose. */
+  tools: string[];
+  /** What it found, or the impact. Carries the project's real numbers. */
+  impact: string;
+  /** Optional pulled-out number. Kept short: it renders large. */
+  stat?: { value: string; label: string };
+  figure?: DetailFigure;
 }
 
 export interface Project {
@@ -232,61 +218,6 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    tag: "Production System · UK recruitment client · In build",
-    title: "Staffing Operations Portal: A Recruitment Agency's Whole Operation in One Login",
-    role: "Solo build · deployed on Railway · roughly 75% of its own roadmap",
-    what: "Built a production staffing platform end to end: a cascading shift-allocation engine, right-to-work document verification, a four-rank permission model, encrypted bank details and National Insurance numbers, and a multilingual in-app assistant that answers worker questions from the agency's own published policies with citations.",
-    outcome: "29,310 lines of TypeScript and SQL across 233 files, 47 API routes, 20 database migrations and 445 automated tests, live on Railway. The hour-cap logic that decides how many hours a student visa holder may legally work has 35 tests of its own, because a wrong answer there is a legal problem for two parties rather than a bad rota.",
-    impact: "the first system I have built where being wrong costs somebody their visa status or their wages rather than a point of accuracy, which is where I learned that most production ML fails for reasons that look like permissions and audit trails, not like a loss curve.",
-    repoNote: "Client codebase, private",
-    detail: {
-      kicker: "Still building, and saying so",
-      headline: "A staffing agency runs on rules nobody wrote down. This is what happened when I wrote them down.",
-      intro: "The client is a UK recruitment agency placing temporary workers into warehouse, care and hospitality roles. They are not named here, and will not be until they have said they are happy to be: how a company handles right-to-work checks is its disclosure to make rather than mine. The work of running it was spread across spreadsheets, phone calls and the memory of whoever had been there longest. This portal is one login that routes each person to the interface for their stage: agency admin, coordinator, a recruit mid-onboarding, or an active worker on the books. It is deployed and it is not finished, and the part that is unfinished is written down below rather than left for someone to discover.",
-      dataset: {
-        name: "The agency's own operation, plus 19 pages of its published site",
-        source: "The agency's own public website, pulled into the assistant's knowledge base, and its existing shift and compliance process",
-        body: "There is no public dataset here. The inputs are the agency's real working rules: which documents clear somebody to take a shift, how many hours a student visa holder may work in term time against a vacation, how a leaver's record is split between what must be deleted and what a statute requires be kept. The assistant's knowledge comes from a fixed list of 19 pages taken from the agency's own sitemap, chunked into roughly 93 passages. A crawl was deliberately rejected: it follows sixty pages of press releases, and a knowledge base that answers 'what does this agency do' with a 2020 story about covid testing is worse than one that cannot answer at all.",
-        facts: [
-          { label: "Lines of TypeScript and SQL", value: "29,310" },
-          { label: "Automated tests", value: "445" },
-          { label: "API routes", value: "47" },
-          { label: "Permission ranks", value: "4" },
-        ],
-      },
-      sections: [
-        {
-          heading: "What it is designed to save, and who for",
-          body: "The agency's workforce turns over constantly, and the portal is sized for roughly 1,200 worker sessions a month across shift offers, availability, document uploads and payslip questions. The saving is not the software, it is the phone call that does not happen: a worker who can see their offers, their hours against their legal cap and what is still missing from their file does not ring a coordinator to ask. That is a design target taken from the agency's own numbers, not an adoption figure. Whether they move their day-to-day operation onto it is their decision, and I do not claim it here.",
-          stat: { value: "~1,200", label: "Monthly worker sessions it is built to carry" },
-        },
-        {
-          heading: "The rule that mattered most, and why it has 35 tests",
-          body: "A student visa holder may work 20 hours in term time and up to 48 in an official vacation. Getting it wrong risks their right to remain in the country. One rule decides everything: a day is a vacation day only when a coordinator has verified a term-date letter, the day falls inside it, and the record has not expired. Every other day is term time. Vacation periods are stored rather than term periods, so a missing, rejected or expired record falls back to the restrictive 20 rather than quietly opening up to 48. A week straddling a boundary takes the lowest cap of any of its days.",
-          stat: { value: "20 vs 48", label: "Weekly hour cap the rule has to get right" },
-        },
-        {
-          heading: "Where the assistant is allowed to say nothing",
-          body: "The in-app assistant retrieves passages from the agency's own pages and answers with citations. It embeds questions and documents with different task types, because a question and the passage answering it share almost no words, and without that asymmetry the relevance cut-off has to sit so low it stops excluding anything. Below the cut-off it says it is not sure and gives the office number. It is also instructed never to fake a human handover, and no tool it can call takes a user id as a parameter, so text a worker types cannot reach another worker's record through it.",
-        },
-        {
-          heading: "The 25% that is not done",
-          body: "Four things. The retrieval cut-off is currently 0.55, which was reasoned rather than measured, and the harness that would tune it has been written but not run against a live key. Elevated admin accounts have no second factor, which is the single biggest remaining security win. The database volume has no scheduled backup, which costs nothing today and costs payroll records the moment real workers are on it. And every data retention period in the leaver flow is flagged unconfirmed on screen, because they are the standard published UK periods rather than advice from anybody qualified to give it.",
-        },
-        {
-          heading: "The outage I caused, and what it taught me",
-          body: "A deploy crash-looped and took the site down. Postgres will not let a newly added enum value be used in the same transaction that adds it, so the migration was correctly split in two. What defeated the split was that the ORM's own migration runner wraps the entire pending set in one transaction, so every restart reapplied the first half, failed on the second, rolled both back and tried again. The fix was a hand-rolled runner giving each migration its own transaction, and a test that applies all twenty migrations to a real Postgres compiled to WebAssembly. Reading SQL is not the same as executing it, which is exactly how that reached production.",
-        },
-      ],
-      plainEnglish: "A recruitment agency has a lot of rules that live in people's heads: who is allowed to take which shift, how many hours a student is legally allowed to work this week, what paperwork is still missing before somebody can start. When those rules live in heads, they get applied differently depending on who is asking and how busy the office is. This is one website where everybody, from the agency owner to someone on their first shift, sees the same answer to the same question. It also has a chat assistant that answers questions out of the agency's own published information and, importantly, admits when it does not know instead of guessing. It is live, it is not finished, and the unfinished parts are listed openly rather than hidden.",
-    },
-    visual: {
-      type: "radialStat",
-      value: 445,
-      label: "Automated tests guarding the rules",
-    },
-  },
-  {
     tag: "Independent Research · Anomaly Detection",
     title: "Anomaly Detection Under Distribution Shift: NSL-KDD & SECOM",
     role: "Solo study · Jul 2026",
@@ -297,51 +228,16 @@ export const projects: Project[] = [
     detail: {
       kicker: "The benchmark lied",
       headline: "A perfect score on the test set, and almost nothing caught in the field.",
-      intro: "Intrusion detection models are usually judged on how well they spot attacks they have already seen. That is the easy half of the problem. The interesting question is what happens when a genuinely new attack arrives, and whether the model's alarm threshold still means what it meant on the day it was calibrated. This study was built to answer that, and the answer inverted the leaderboard.",
-      dataset: {
-        name: "NSL-KDD",
-        source: "Canadian Institute for Cybersecurity, University of New Brunswick",
-        body: "Network connection records labelled as normal traffic or one of many attack types. The test set deliberately contains 17 attack types that appear nowhere in training, which is what makes it usable for measuring genuine novelty rather than memorisation. Every threshold was calibrated on held-out normal traffic at a fixed 1% false-positive budget, then frozen before the test set was touched.",
-        facts: [
-          { label: "Training records", value: "125,973" },
-          { label: "Test records", value: "22,544" },
-          { label: "Unseen attack types", value: "17" },
-          { label: "Novel records in test", value: "3,750" },
-        ],
+      built: "A benchmark of eight anomaly detectors on NSL-KDD intrusion data, scored against 17 attack types held out of training and a false-positive budget fixed before the test set was touched.",
+      process: "A model that wins on the headline metric is answering a different question from a model that still works once the data drifts. Every threshold was calibrated on clean traffic at a 1% false-positive budget, then frozen, so the test set could not quietly inflate the numbers.",
+      tools: ["Python", "Scikit-learn", "NSL-KDD", "ROC-AUC", "Mann-Whitney test"],
+      impact: "A Random Forest scoring a perfect 1.0000 ROC-AUC caught just 5.1% of unseen attacks once held to its real false-positive budget, against 33.2% for an Isolation Forest that looked worse on the headline number: 6.4x more novel attacks for the same false-alarm cost. Two hypotheses were tested and failed, and both are in the write-up.",
+      stat: { value: "6.4x", label: "More unseen attacks caught, same false-alarm cost" },
+      figure: {
+        src: "/figures/anomaly-threshold-drift.png",
+        alt: "Chart showing realised false-positive rate against the 1% calibration target for each detector",
+        caption: "Every detector's realised false-positive rate against the 1% budget it was calibrated for. The Random Forest runs at 9.75%, the Isolation Forest at 1.70%.",
       },
-      sections: [
-        {
-          heading: "What a perfect ROC-AUC actually bought",
-          body: "Under random cross-validation the Random Forest scored 1.0000. Flawless. Then it was shown 17 attack types deliberately held out of training, with its decision threshold calibrated on clean traffic at a 1% false-positive budget and then frozen. Held to that budget, it caught 5.1% of the unseen attacks.",
-          stat: { value: "5.1%", label: "Novel attacks caught at a true 1% false-positive rate" },
-        },
-        {
-          heading: "Where the missing 78 points went",
-          body: "The model appeared to detect 83.2%. It was doing that while flagging 9.75% of all normal traffic, nearly ten times the budget it had been given. Its score distribution had shifted under drift, so the frozen cutoff quietly stopped meaning what it meant at calibration time. The detection rate was real. The price was hidden.",
-        },
-        {
-          heading: "The model that looked worse was better",
-          body: "An Isolation Forest, which trails badly on the headline benchmark, held its calibration to within 1.7x and caught 33.2% at a genuine 1% false-positive rate. That is 6.4 times more novel attacks for the same cost in analyst time. A detection rate quoted without its false-positive rate does not just overstate performance, it ranks the models in the wrong order.",
-          stat: { value: "6.4x", label: "More unseen attacks caught, same analyst cost" },
-        },
-        {
-          heading: "What was left in rather than tidied away",
-          body: "Two hypotheses were tested and failed, including the expectation that supervised models would degrade more than one-class models on novel attacks. The Mann-Whitney test on that comparison returned p = 0.39 across three supervised and five one-class detectors, which is underpowered and reported as such. Both are in the write-up. A benchmark that only contains the results that worked is not a benchmark.",
-        },
-      ],
-      plainEnglish: "Think of a smoke alarm tested only with the kind of smoke it was built for. It passes perfectly, so you fit it and forget it. Then a different kind of fire starts, and the alarm stays quiet. Worse, the one you rejected as too twitchy turns out to catch six times more of the fires you did not anticipate, for the same number of false alarms a week. The lesson is not that one detector is better. It is that a detection rate quoted without the false-alarm rate that came with it will rank your options in the wrong order.",
-      figures: [
-        {
-          src: "/figures/anomaly-threshold-drift.png",
-          alt: "Chart showing realised false-positive rate against the 1% calibration target for each detector",
-          caption: "Every detector's realised false-positive rate against the 1% budget it was calibrated for. The Random Forest runs at 9.75%, the Isolation Forest at 1.70%.",
-        },
-        {
-          src: "/figures/anomaly-known-vs-novel.png",
-          alt: "Detection rates on known versus novel attack partitions for eight detectors",
-          caption: "Detection on attack types seen in training versus the 17 held out. The gap is where deployment performance actually lives.",
-        },
-      ],
     },
     visual: {
       type: "comparisonBar",
@@ -351,6 +247,15 @@ export const projects: Project[] = [
       primaryCaption: "Novel-attack detection at a true 1% FPR (%)",
       valueDecimals: 1,
     },
+  },
+  {
+    tag: "Production System · Live on this site",
+    title: "Laudbot: An Assistant Instructed to Say No Rather Than Guess",
+    role: "Solo build · live on Railway, powered by Gemini",
+    what: "Built the chat widget on this site: a Gemini-powered assistant that answers visitor questions about my background, projects and availability from a corpus generated directly out of this site's own content, so it cannot drift out of sync with what the page itself says.",
+    outcome: "The whole corpus is roughly 10,800 tokens and is stuffed directly into the prompt rather than retrieved, a deliberate choice at this size over standing up a vector index for a few hundred passages: this is a context-window assistant, not RAG. Sensitive questions (salary, notice period, visa, references, negotiation, feedback) are caught by regex before any model call and routed to email instead of answered, so that rule cannot be talked around.",
+    impact: "the one part of the site that is not static text: a visitor who wants to know something specific can ask instead of searching the page, and it costs nothing to keep in sync since the corpus regenerates from the same content every build.",
+    repoNote: "Built into this site's own codebase, not a separate repo",
   },
   {
     tag: "MSc Dissertation · University of Hull",
@@ -363,43 +268,11 @@ export const projects: Project[] = [
     detail: {
       kicker: "Submitted and defended",
       headline: "The expensive data source did not help, and the evidence that it hurt was mostly my own model specification.",
-      intro: "Phone location data made human movement measurable at the same resolution as epidemic reporting, so mobility features went into COVID-19 forecasting almost everywhere. Whether they beat a county's own recent case history is tested much less often. This asks that question directly, with matched pairs that differ in one thing only, and the answer is no.",
-      dataset: {
-        name: "US county COVID-19 cases, inter-county mobility flows, socioeconomic context",
-        source: "Johns Hopkins case counts, GeoDS weekly flow records, American Community Survey",
-        body: "Weekly case counts for 3,219 counties over 96 weeks from March 2020 to December 2021, joined to 55.6 million records of estimated county-to-county movement and twelve socioeconomic variables. Eight of the nine configurations are four matched pairs: identical model, identical tuning, the only difference being whether mobility features are supplied. The ninth consumes the flow network as an explicit graph. Matching is the whole design, because a comparison that changes two things at once cannot attribute the result to either.",
-        facts: [
-          { label: "US counties", value: "3,219" },
-          { label: "Mobility flow records", value: "55.6M" },
-          { label: "Configurations", value: "9" },
-          { label: "County-weeks scored", value: "57,942" },
-        ],
-      },
-      sections: [
-        {
-          heading: "What won, and by how little it mattered",
-          body: "XGBoost with mobility led at R squared 0.8872. XGBoost without mobility reached 0.8870. The two arms are separated by 0.0002, and a Diebold-Mariano test puts that at p = 0.926, which is another way of saying the mobility data bought nothing. The LSTM pair told the same story at p = 0.553. Accuracy also hides trouble: SARIMA looks respectable at 0.7641 on a log scale while its error in actual cases is 2,734 against 517 for the leader, because a fit that is fine in aggregate can still be badly wrong on the largest counties.",
-          stat: { value: "0.0002", label: "R squared gained from mobility, XGBoost, p = 0.926" },
-        },
-        {
-          heading: "The finding I had to take away from myself",
-          body: "The seasonal classical pair looked dramatic: supplying mobility cost 0.1894 in R squared, clearly significant. It was the most quotable number in the study and it was close to meaningless. A 52-week seasonal period cannot be identified from 55 weeks of training data, so the model was being asked for something the window could not support. Refitted without the seasonal term, the same comparison cost 0.0041. The sign held and the significance held, but 98 percent of the effect belonged to the specification, not to the data. Chasing that down cost weeks and removed my best headline.",
-          stat: { value: "98%", label: "Of the apparent mobility penalty was specification, not data" },
-        },
-        {
-          heading: "The graph arm, which was the interesting part of the hypothesis",
-          body: "If mobility is going to help anywhere, it should help most when represented as what it actually is, a directed weighted network. The graph-attention model reached 0.5593 against 0.8163 for an LSTM given the same mobility information as flat columns, a gap of 0.2570 in favour of the simpler representation. It was not a convergence failure: the best validation loss was roughly eighteen times the recurrent model's, so the shortfall is there during training. It also absorbed none of the spatial dependence it was introduced to capture. Moran's I on residuals was significant in all 18 test weeks for every configuration tested, including the graph one.",
-        },
-        {
-          heading: "Where the error lands",
-          body: "Aggregate accuracy says nothing about who the model is wrong about. Split by socioeconomic quartile, every configuration had unequal error, with disparity ratios from 1.15 to 2.10 and the widest gaps on income. The least accurate model was the most equal one, which is an uncomfortable trade to have to report and the reason it is reported here rather than left out.",
-        },
-        {
-          heading: "Status",
-          body: "Submitted on 17 August 2026 and defended at viva on 1 September 2026, supervised by Dr Tongxin Chen, with results due later in the year. The numbers above come from the submitted report rather than from an earlier draft, which matters because this study changed its own headline twice on the way through. A null result is where a viva either holds or falls apart, particularly once you have told the room that your own strongest evidence was an artefact. It held.",
-        },
-      ],
-      plainEnglish: "Everyone assumed that knowing how much people travelled between areas would help predict where an outbreak went next. It is an expensive dataset and the reasoning is sensible. I tested it properly, by running the same models twice, once with the travel data and once without, changing nothing else. It made no useful difference. I also found something that made me uncomfortable: my own strongest evidence that the travel data was harmful was wrong, caused by a setting in my model rather than by the data itself. Finding that out cost me my best result. Reporting it anyway is the point.",
+      built: "A test of whether county-to-county mobility data improves COVID-19 case forecasting beyond a county's own recent history, across 3,219 US counties and 96 weeks, using matched pairs that differ in one thing only: whether mobility is supplied.",
+      process: "Matching is the whole design: a comparison that changes two things at once cannot attribute the result to either. Four matched pairs plus a graph-attention arm consuming the mobility network directly, scored on 57,942 county-weeks, each pair identical except for the mobility features.",
+      tools: ["Python", "XGBoost", "LSTM", "GAT-LSTM", "SARIMA", "Diebold-Mariano test"],
+      impact: "Mobility was statistically indistinguishable from zero (XGBoost p=0.926, LSTM p=0.553). The classical family appeared to lose 0.1894 in R² from mobility, looking like the headline finding, until refitting without an unidentifiable 52-week seasonal term on 55 weeks of data cut that to 0.0041: 98% of my own best result was specification, not data. Submitted 17 Aug 2026, defended 1 Sep 2026.",
+      stat: { value: "98%", label: "Of the apparent mobility penalty was specification, not data" },
     },
     visual: {
       type: "comparisonBar",
@@ -421,33 +294,10 @@ export const projects: Project[] = [
     detail: {
       kicker: "Shipped, not notebooked",
       headline: "A working browser product wiring live market data to three separate LLM providers.",
-      intro: "Almost everything in a data science portfolio is a notebook that ran once on a static file. This is the opposite: a live product with real-time inputs, three third-party model providers, and all the failure modes that only appear when something is actually running and someone is actually looking at it.",
-      dataset: {
-        name: "Live foreign-exchange market feed",
-        source: "Twelve Data API, with Claude, Groq and Gemini as reasoning providers",
-        body: "Streaming currency pair data rather than a fixed file. That distinction drives the whole architecture: rate limits, partial responses, provider disagreement and malformed payloads are ordinary operating conditions, not edge cases, and the interface has to stay honest while any of them are happening.",
-        facts: [
-          { label: "LLM providers", value: "3" },
-          { label: "Market data source", value: "Twelve Data" },
-          { label: "Build", value: "Solo, end to end" },
-          { label: "Prediction layer", value: "In scoping" },
-        ],
-      },
-      sections: [
-        {
-          heading: "What it does",
-          body: "Live foreign-exchange data from the Twelve Data API feeds a currency-strength heatmap and an order-flow engine, with Claude, Groq and Gemini generating market commentary and signals on top. Three providers rather than one, so a single vendor outage or rate limit does not take the product down.",
-        },
-        {
-          heading: "Why it is here",
-          body: "Most of a data science portfolio is notebooks. Notebooks do not teach you what happens when an API rate-limits mid-request, when providers disagree, or when a response arrives malformed at the exact moment someone is looking at the screen. This one is a product with users' expectations attached, and it was built and shipped solo.",
-        },
-        {
-          heading: "What it does not claim",
-          body: "There is no accuracy figure here, because the prediction layer is still being scoped. Adding one would mean quoting a backtest that has not been run. The next step is an XGBoost baseline, then a Temporal Fusion Transformer, and the numbers get published when they exist.",
-        },
-      ],
-      plainEnglish: "This is a working website that watches currency markets and explains, in ordinary language, what is happening and why it might matter. It asks three different AI services rather than one, so that if a provider goes down or gives a strange answer the tool keeps working. It does not predict prices, and it does not pretend to. The prediction part is being built next, and the numbers will be published when they are real.",
+      built: "A browser-based FX intelligence tool: a live currency-strength heatmap and order-flow engine, with Claude, Groq and Gemini generating market commentary and signals on top of a live Twelve Data feed.",
+      process: "Streaming data rather than a fixed file drives the whole architecture. Rate limits, partial responses, provider disagreement and malformed payloads are ordinary operating conditions here, not edge cases, so the interface has to stay honest while any of them are happening. Three providers rather than one, so a single vendor outage does not take the product down.",
+      tools: ["Next.js", "Twelve Data API", "Claude", "Groq", "Gemini"],
+      impact: "A shipped, end-to-end product rather than a notebook, with real users' expectations attached. No accuracy figure appears anywhere: the prediction layer (an XGBoost baseline, then a Temporal Fusion Transformer) is still being scoped, and the numbers get published when a real backtest exists.",
     },
     visual: {
       type: "flow",
@@ -466,39 +316,11 @@ export const projects: Project[] = [
     detail: {
       kicker: "It was cheating",
       headline: "The best model scored 92% in-domain and exactly chance level the moment the sentences came from somewhere else.",
-      intro: "Sarcasm is the case where literal meaning and intended meaning point in opposite directions, which is why sentiment tools handle it so badly. This project compared six approaches to detecting it, found a clear winner, and then asked the question that decides whether a model is real: does it still work on text it has never seen the style of?",
-      dataset: {
-        name: "Sarcasm Headlines Dataset",
-        source: "News headlines from a satirical and a straight publication",
-        body: "Headlines labelled sarcastic or not, which makes labelling reliable but introduces a trap: the two classes come from two different publications, so a model can score well by learning house style instead of sarcasm. A separate hand-built probe of 24 out-of-domain sentences was used to test exactly that.",
-        facts: [
-          { label: "Headlines", value: "28,503" },
-          { label: "Approaches compared", value: "6" },
-          { label: "Out-of-domain probes", value: "24" },
-          { label: "Significance test", value: "McNemar, p < 0.001" },
-        ],
-      },
-      sections: [
-        {
-          heading: "Six approaches, one honest test",
-          body: "Naive Bayes, Logistic Regression, LSTM, GRU and MiniLM in both frozen and fine-tuned form were compared on 28,503 news headlines. The fine-tuned MiniLM won convincingly at 92% accuracy and 0.974 AUC-ROC. On this dataset it looked finished.",
-          stat: { value: "0.974", label: "AUC-ROC in-domain, the number that flattered it" },
-        },
-        {
-          heading: "Then it met sentences it had not been trained on",
-          body: "Every model was stress-tested on 24 out-of-domain sentences. The fine-tuned MiniLM dropped to 50%, which on a two-class problem is a coin toss. It had not learned sarcasm. It had learned the stylistic fingerprint of one publication's headlines, and that fingerprint does not exist outside the training corpus.",
-          stat: { value: "50%", label: "Out-of-domain accuracy, identical to guessing" },
-        },
-        {
-          heading: "The weakest model performed the same",
-          body: "Out of domain, the transformer matched the far simpler LSTM baseline exactly. Whatever the extra capacity bought in-domain evaporated. The in-domain difference was confirmed as statistically real by McNemar's test at p < 0.001, which makes the collapse more interesting rather than less: a genuine, significant, measurable advantage that transferred not at all.",
-        },
-        {
-          heading: "Why this is the useful result",
-          body: "A model comparison that ends at the leaderboard would have shipped the transformer. The out-of-domain probe is cheap, takes 24 sentences, and is the difference between a model that works and a model that appears to. This is the check worth running before trusting any benchmark number, including your own.",
-        },
-      ],
-      plainEnglish: "The model was trained on headlines from two publications: one satirical, one serious. It scored brilliantly, and it achieved that by learning to recognise which newspaper a headline came from, not by understanding sarcasm. Shown sarcastic sentences written by ordinary people, it was no better than flipping a coin. Twenty-four test sentences were enough to reveal that. Without them it would have looked ready to ship.",
+      built: "A comparison of six approaches, Naive Bayes, Logistic Regression, LSTM, GRU and MiniLM frozen and fine-tuned, for detecting sarcasm across 28,503 news headlines, then stress-tested on 24 hand-built out-of-domain sentences.",
+      process: "The two label classes come from two different publications, which makes labelling reliable but lets a model win by learning house style instead of sarcasm. The out-of-domain probe exists specifically to catch that before trusting the leaderboard.",
+      tools: ["Python", "PyTorch", "MiniLM Transformer", "LSTM / GRU", "McNemar's test"],
+      impact: "Fine-tuned MiniLM won in-domain at 92% accuracy (0.974 AUC-ROC, confirmed real by McNemar's test, p<0.001), then collapsed to 50%, chance level, out of domain: identical to the far simpler LSTM baseline. It had learned a publication's stylistic fingerprint, not sarcasm.",
+      stat: { value: "50%", label: "Out-of-domain accuracy, identical to guessing" },
     },
     visual: {
       type: "comparisonBar",
@@ -519,51 +341,16 @@ export const projects: Project[] = [
     detail: {
       kicker: "Marked, then re-opened",
       headline: "The graded submission had filtered the wrong vehicle codes, and the missing class was the most dangerous one.",
-      intro: "This was submitted, marked and finished. Going back to it afterwards, against the raw database rather than the write-up, turned up a filtering error that had quietly reshaped one of the headline findings. Everything below is the corrected version, with the size of the original error stated rather than smoothed over.",
-      dataset: {
-        name: "STATS19 road casualty records, plus SNAP ego-networks",
-        source: "UK Department for Transport, and Stanford SNAP",
-        body: "STATS19 is the national record of road collisions reported to police, one row per collision, joined to casualty and vehicle tables. Codes are numeric and their meanings are not self-evident, which is exactly where the error came from. The social network half uses Stanford's anonymised Facebook ego-networks, and the two datasets share no entities: they are parallel exercises in different techniques, not an integrated study.",
-        facts: [
-          { label: "Collision records", value: "461,352" },
-          { label: "Casualty records", value: "600,332" },
-          { label: "Vehicle records", value: "849,091" },
-          { label: "Network nodes / edges", value: "4,039 / 88,234" },
-        ],
+      built: "A STATS19 road-collision study (461,352 records) alongside a separate SNAP Facebook ego-network exercise (4,039 nodes), covering association rule mining, spatial clustering, time-series forecasting and community detection. Graded Distinction.",
+      process: "Revisited after marking, against the raw database rather than the write-up. The motorcycle analysis had selected STATS19 codes 2-4 and labelled them up to 500cc; those codes actually sit one class lower, and code 5, the real over-500cc class, was excluded entirely, a one-digit filtering error.",
+      tools: ["Python", "Pandas", "GeoPandas", "NetworkX", "DBSCAN / K-Means", "Association rule mining"],
+      impact: "The excluded class carried the highest killed-or-seriously-injured rate in the dataset, 46.4% against 23.9% for the smallest machines, dropping 20,950 motorcycles (31.1% of all of them) and biasing the severity finding downward. Scored against a seasonal-naive benchmark the original never used, the forecast model also lost to simply repeating last year on the largest force (-2.7% skill).",
+      stat: { value: "31.1%", label: "Of motorcycles excluded by the original filter" },
+      figure: {
+        src: "/figures/roads-motorcycles-corrected.png",
+        alt: "Two charts of motorcycle collisions by hour and weekday across all four engine classes",
+        caption: "The corrected analysis, with all four STATS19 engine classes including the over-500cc group that was previously excluded.",
       },
-      sections: [
-        {
-          heading: "One digit, thirty-one per cent of the data",
-          body: "The motorcycle analysis selected STATS19 vehicle codes 2, 3 and 4 and labelled them as up-to-125cc, 125-500cc and over-500cc. Those codes are actually 50cc-and-under, 125cc-and-under and 125-to-500cc. Every label sat one class low, and code 5, the real over-500cc class, was excluded entirely.",
-          stat: { value: "20,950", label: "Motorcycles dropped, 31.1% of all of them" },
-        },
-        {
-          heading: "Why the omission mattered more than its size",
-          body: "The excluded class carries the highest killed-or-seriously-injured rate in the dataset at 46.4%, against 23.9% for the smallest machines. Leaving it out did not just shrink the sample, it biased the severity finding downward. It also removed the only class that breaks the weekday commuting pattern: weekend share sits flat between 23.6% and 25.1% for the three smaller classes, then steps up to 30.9%.",
-          stat: { value: "46.4%", label: "KSI rate of the class that was left out" },
-        },
-        {
-          heading: "The forecast that was never checked against doing nothing",
-          body: "The original reported forecast error and stopped. Scoring the same models against a seasonal-naive benchmark, simply repeating last year's week, changes the conclusion: the model adds 23.1% skill on Humberside and 2.2% on West Yorkshire, but scores -2.7% on the Metropolitan force. On the largest force in the dataset, the machinery was performing worse than repetition.",
-        },
-        {
-          heading: "The highest-scoring rule was meaningless",
-          body: "In the association-rule mining, the top rule by lift is Rain to Wet Road at 4.22. Rain is what makes roads wet. Sorting a rule table by lift puts mechanical relationships at the top, which is why conviction is reported alongside it. The actionable rules are the moderate-lift ones tied to things a highway authority can change: speed limits and street lighting.",
-        },
-      ],
-      plainEnglish: "Motorcycles in this national database are recorded in four engine-size categories, numbered 2 to 5. The original analysis used 2, 3 and 4, and labelled them as though they were the full range. They are not: the largest bikes are category 5, and they were left out entirely. That removed one motorbike in three from the study, and specifically the ones most likely to be involved in a fatal or serious collision. So the work concluded motorcycle collisions were less severe, and more of a weekday commuting problem, than they really are. One wrong number in a filter, and a road safety finding points at the wrong riders.",
-      figures: [
-        {
-          src: "/figures/roads-motorcycles-corrected.png",
-          alt: "Two charts of motorcycle collisions by hour and weekday across all four engine classes",
-          caption: "The corrected analysis, with all four STATS19 engine classes including the over-500cc group that was previously excluded.",
-        },
-        {
-          src: "/figures/roads-clustering.png",
-          alt: "Side by side scatter plots of West Yorkshire collisions under K-Means and DBSCAN clustering",
-          caption: "K-Means against DBSCAN on the same collisions. Silhouette 0.539 versus 0.265, but DBSCAN leaves 9.5% as noise rather than forcing rural collisions into a cluster.",
-        },
-      ],
     },
     visual: {
       type: "comparisonBar",
@@ -585,55 +372,16 @@ export const projects: Project[] = [
     detail: {
       kicker: "When accuracy is a trap",
       headline: "Only 3.39% of these machines fail, so a model that never predicts failure is already 96.6% accurate.",
-      intro: "Rare events break the metric everyone reaches for first. When almost nothing fails, a model can be spectacularly accurate and completely useless at the same time, and the number on the slide will not tell you which one you have. This project is built around refusing that number and reporting the ones that survive the imbalance.",
-      dataset: {
-        name: "AI4I 2020 Predictive Maintenance Dataset",
-        source: "Matzka (2020), UCI Machine Learning Repository, CC BY 4.0",
-        body: "Ten thousand snapshots of a milling machine: air and process temperature, rotational speed, torque and tool wear, with a binary failure flag. It is synthetic, generated to reproduce realistic failure dynamics rather than logged from a real plant, and it holds no timestamps linking rows into a machine's history. Both facts bound what it can honestly support.",
-        facts: [
-          { label: "Machine records", value: "10,000" },
-          { label: "Actual failures", value: "339" },
-          { label: "Failure rate", value: "3.39%" },
-          { label: "Naive-model accuracy", value: "96.6%" },
-        ],
+      built: "A predictive-maintenance classifier on the AI4I2020 industrial dataset (10,000 machine records), engineering sensor-derived features and choosing evaluation metrics that survive severe class imbalance rather than raw accuracy.",
+      process: "A system that ignores every sensor and says \"fine\" every time scores 96.6%, so accuracy is never reported as a result here. Gradient Boosting was selected on F1 against Random Forest and Logistic Regression, then cross-validated five ways rather than trusting one flattering split.",
+      tools: ["Python", "Scikit-learn", "Gradient Boosting", "Chi-square testing", "Cross-validation"],
+      impact: "94.7% precision with cross-validated recall of 0.761 ± 0.057. Tool wear bands show risk flat at ~2.2% then tripling to 6.06% past a critical threshold, a maintenance decision available without deploying anything, and a chi-square test (p=0.001) found low-power machines fail more often than high-power ones, counter to the obvious read. A claimed dominant signal (tool wear) was withdrawn once two importance methods disagreed on it under re-analysis.",
+      stat: { value: "94.7%", label: "Precision, machine-failure detection" },
+      figure: {
+        src: "/figures/ai4i-toolwear-band.png",
+        alt: "Bar chart of machine failure rate across four tool wear bands",
+        caption: "Failure rate by tool wear band. Flat at roughly 2.2% across the first three, then 6.06% once wear turns critical.",
       },
-      sections: [
-        {
-          heading: "Why no accuracy figure appears anywhere",
-          body: "Failure is rare. A system that ignores every sensor and says \"this machine is fine\" every single time scores 96.6%. That number sounds excellent and means nothing. So accuracy is not reported as a result anywhere in this project, and the metrics that survive the imbalance are used instead.",
-          stat: { value: "96.6%", label: "Accuracy of a model that predicts nothing at all" },
-        },
-        {
-          heading: "What the model actually does",
-          body: "Gradient Boosting, selected on F1 against Random Forest and Logistic Regression, reaches 94.7% precision. Of 68 real failures in the held-out set it catches 54 and raises 3 false alarms among 1,932 healthy machines. Recall from a single split flatters it, so five-fold cross-validation gives the honest figure: 0.761 plus or minus 0.057, a range rather than a point.",
-          stat: { value: "76%", label: "Cross-validated recall, with its uncertainty attached" },
-        },
-        {
-          heading: "The finding that needs no model at all",
-          body: "Grouping tool wear into bands shows risk is flat across the first three, at 2.17%, 2.33% and 2.18%, then roughly triples to 6.06% once wear passes the critical threshold. Replacing tools slightly earlier buys almost nothing. Letting them run into that final band is where the risk actually sits. That is a maintenance decision available without deploying anything.",
-        },
-        {
-          heading: "A pattern that cuts against intuition",
-          body: "A chi-square test confirmed machine type predicts failure risk (χ² = 13.75, p = 0.001), and the direction ran counter to expectation: low-power machines failed more often than high-power ones, 3.9% against 2.1%. That's worth checking before the failure flag gets read as a simple hardware-quality signal.",
-        },
-        {
-          heading: "A claim the project had to withdraw",
-          body: "The write-up stated tool wear was the dominant predictive signal, confirmed by two independent methods. Re-running both from the raw data contradicted it. Permutation importance ranks rotational speed first with tool wear fourth; the impurity-based method ranks power output first with tool wear third. The two methods disagree with each other, so neither is quoted as definitive. The correction is documented rather than quietly dropped.",
-        },
-      ],
-      plainEnglish: "Out of ten thousand machines, only 339 actually broke. So a system that shrugs and says everything is fine, every single time, is right 96.6% of the time. That sounds like a triumph and is worth nothing, because it never once warns you. The honest questions are different: of the machines that really did break, how many did we catch, and of the alarms we raised, how many were real. This model catches roughly three in four breakdowns and is right about 95% of the time it raises an alarm. The most useful thing in the whole study needs no model at all: once a cutting tool passes about 150 minutes of wear, the failure rate roughly triples.",
-      figures: [
-        {
-          src: "/figures/ai4i-toolwear-band.png",
-          alt: "Bar chart of machine failure rate across four tool wear bands",
-          caption: "Failure rate by tool wear band. Flat at roughly 2.2% across the first three, then 6.06% once wear turns critical.",
-        },
-        {
-          src: "/figures/ai4i-threshold.png",
-          alt: "Line chart of recall and precision across decision thresholds from 0.1 to 0.9",
-          caption: "The recall and precision trade-off across every cutoff. Where to draw the line is a business decision about the cost of a missed breakdown, not one the model can make.",
-        },
-      ],
     },
     visual: {
       type: "radialStat",
@@ -641,6 +389,29 @@ export const projects: Project[] = [
       suffix: "%",
       decimals: 1,
       label: "Precision, machine-failure detection",
+    },
+  },
+  {
+    tag: "Production System · UK recruitment client · In build",
+    title: "Staffing Operations Portal: A Recruitment Agency's Whole Operation in One Login",
+    role: "Solo build · deployed on Railway · roughly 75% of its own roadmap",
+    what: "Built a production staffing platform end to end: a cascading shift-allocation engine, right-to-work document verification, a four-rank permission model, encrypted bank details and National Insurance numbers, and a multilingual in-app assistant that answers worker questions from the agency's own published policies with citations.",
+    outcome: "29,310 lines of TypeScript and SQL across 233 files, 47 API routes, 20 database migrations and 445 automated tests, live on Railway. The hour-cap logic that decides how many hours a student visa holder may legally work has 35 tests of its own, because a wrong answer there is a legal problem for two parties rather than a bad rota.",
+    impact: "the first system I have built where being wrong costs somebody their visa status or their wages rather than a point of accuracy, which is where I learned that most production ML fails for reasons that look like permissions and audit trails, not like a loss curve.",
+    repoNote: "Client codebase, private",
+    detail: {
+      kicker: "Still building, and saying so",
+      headline: "A staffing agency runs on rules nobody wrote down. This is what happened when I wrote them down.",
+      built: "A production staffing platform for a UK recruitment agency: a cascading shift-allocation engine, right-to-work document verification, a four-rank permission model, encrypted bank details and National Insurance numbers, and a multilingual in-app assistant answering worker questions from the agency's own published policies with citations.",
+      process: "The agency's real working rules, not a public dataset: which documents clear somebody for a shift, how many hours a student visa holder may work in term time against a vacation, how a leaver's record splits between what must be deleted and what a statute requires be kept. One rule decided everything in the hour-cap logic, so it carries 35 tests of its own.",
+      tools: ["TypeScript", "PostgreSQL", "Railway", "Retrieval with citations", "Automated testing"],
+      impact: "29,310 lines of TypeScript and SQL, 445 automated tests, live on Railway, sized for roughly 1,200 worker sessions a month. Four things are openly unfinished: the retrieval cut-off is reasoned rather than measured, elevated admin accounts have no second factor, the database has no scheduled backup, and every data-retention period is flagged unconfirmed. A deploy crash-loop from a Postgres migration-ordering bug taught me more about production failure modes than any model has.",
+      stat: { value: "445", label: "Automated tests guarding the rules" },
+    },
+    visual: {
+      type: "radialStat",
+      value: 445,
+      label: "Automated tests guarding the rules",
     },
   },
 ];
@@ -757,6 +528,51 @@ export const currentlyWorkingOn: WipItem[] = [
     status:
       "Not started, on purpose. The trigger and the one trap in the migration are both already written into the portal's own notes so the decision survives me forgetting it.",
     tools: ["pgvector", "Postgres", "HNSW indexing"],
+  },
+  {
+    title: "A second model behind Laudbot, for the day Gemini is the one that's down",
+    stage: "Scoping",
+    what: "Adding Grok as a fallback provider for the site's chat widget, so a Gemini outage or rate limit does not take the assistant down.",
+    whyItMatters:
+      "Laudbot runs on a single provider today. That is fine until the one afternoon it is not, and a recruiter asking it a question is exactly the wrong moment to find out.",
+    aiming:
+      "A provider swap invisible to whoever is asking: Gemini first, Grok on failure, with no change to the question-answering behaviour either side notices.",
+    status:
+      "Not started. The corpus and prompt are provider-agnostic already, so the work is the swap logic and a second API key, not a rebuild.",
+    tools: ["Gemini", "Grok (xAI)", "Provider fallback"],
+  },
+  {
+    title: "A voice receptionist for people who can't take every call",
+    stage: "Next up",
+    what: "An AI phone receptionist for small businesses and high-value callers, COOs and MDs among them, that takes the call, collects what matters, and routes it or summarises it to the right person or department.",
+    whyItMatters:
+      "The calls that get missed are often the ones that mattered most, and the person who should have taken it usually finds out hours later from a voicemail they did not have time to listen to properly.",
+    aiming:
+      "A call handled well enough that the person on the other end does not notice it was not a person, and a summary that tells the right department what actually needs attention rather than a transcript they have to read in full.",
+    status: "Idea stage. Not started.",
+    tools: ["Voice AI", "Speech-to-text", "LLM summarisation", "Call routing"],
+  },
+  {
+    title: "Generate a landing page or an ad for whoever asks",
+    stage: "Next up",
+    what: "A request flow, likely through this site or Laudbot, where a visitor can ask for a short ad video or a landing page built from a brief and get a live URL back.",
+    whyItMatters:
+      "The fastest way to show what an automation or design skill can do is to let someone ask for it and watch it happen, rather than read a description of it happening to somebody else.",
+    aiming:
+      "A visitor types what they want and gets something real and inspectable back: a live link, not a mockup screenshot.",
+    status: "Idea stage. Not started.",
+    tools: ["Video generation", "Landing page generation", "Agentic workflows"],
+  },
+  {
+    title: "A WhatsApp responder for small Hull businesses, for off-hours and busy minutes",
+    stage: "Next up",
+    what: "An AI customer-service automation on WhatsApp for small and medium Hull businesses: answering client questions outside business hours or during a rush, booking appointments, and handling whatever else a given business needs wired in.",
+    whyItMatters:
+      "A small business without a receptionist loses the customer who messages at 9pm or during the lunchtime rush, not because the business could not have helped, but because nobody saw the message in time.",
+    aiming:
+      "A business owner who can point WhatsApp at this and stop losing the customers who message outside opening hours.",
+    status: "Idea stage. Not started.",
+    tools: ["WhatsApp Business API", "LLM", "Appointment scheduling", "Integrations"],
   },
 ];
 

@@ -56,19 +56,11 @@ function projectBlock(p: (typeof projects)[number]): string {
   if (d) {
     lines.push(
       `Headline: ${d.headline}`,
-      `Introduction: ${d.intro}`,
-      `Dataset: ${d.dataset.name} (source: ${d.dataset.source}). ${d.dataset.body}`,
-      `Key numbers: ${d.dataset.facts.map((f) => `${f.label} = ${f.value}`).join("; ")}`,
+      `What he set out to build: ${d.built}`,
+      `How he thought about it: ${d.process}`,
+      `Tools: ${d.tools.join(", ")}`,
+      `What it found: ${d.impact}${d.stat ? ` (Headline figure: ${d.stat.value}, ${d.stat.label})` : ""}`,
     );
-    for (const s of d.sections) {
-      lines.push(
-        `Finding, ${s.heading}: ${s.body}${s.stat ? ` (Headline figure: ${s.stat.value}, ${s.stat.label})` : ""}`,
-      );
-    }
-    // The single most important line per project for this bot's job. When a
-    // visitor says "explain it like I'm not technical", this is the answer
-    // Laud already wrote, in his own words, rather than one the model invents.
-    lines.push(`PLAIN ENGLISH EXPLANATION: ${d.plainEnglish}`);
   }
   return lines.join("\n");
 }
