@@ -124,7 +124,7 @@ export const experience: ExperienceEntry[] = [
       "Structured mentorship programme in data analysis fundamentals and career readiness. Completed practical Excel/SQL data-cleaning projects, strengthened data storytelling for non-technical audiences, and built an analytical project portfolio with dashboards.",
   },
   {
-    role: "Area Sales Manager",
+    role: "Distributor Analytics and Demand Forecaster",
     company: "Sweet Nutrition Limited",
     period: "Jun 2022 – Aug 2025",
     location: "Kumasi, Ghana",
@@ -136,28 +136,20 @@ export const experience: ExperienceEntry[] = [
       "Managed a defined sales territory to target, developed and executed the sales plans behind it, and tracked market and competitor movement. Produced AI-assisted trend analysis and KPI dashboards for senior leadership.",
   },
   {
-    role: "Branch Sales Manager, Pharmaceuticals & FMCG",
+    role: "Senior Analytics Executive",
     company: "Classfam Pharmaceuticals",
     period: "May 2021 – May 2022",
     location: "Cape Coast, Ghana",
     description:
-      "Led branch sales operations and product distribution across pharmaceutical and FMCG sectors, applying data-integrity and audit-trail standards directly analogous to production ML data governance. Built and ran the weekly customer-performance tracker covering 180+ pharmacy, chemical-shop and clinic accounts across the Cape Coast and Central Region territory, logging each account's order activity against the week.",
+      "Promoted from Sales Analytics and Reporting Manager to Senior Analytics Executive within the branch, leading sales operations and product distribution across pharmaceutical and FMCG sectors and applying data-integrity and audit-trail standards directly analogous to production ML data governance. Built and ran the weekly customer-performance tracker covering 180+ pharmacy, chemical-shop and clinic accounts across the Cape Coast and Central Region territory, logging each account's order activity against the week.",
   },
   {
-    role: "Territory Sales Supervisor",
+    role: "Sales & Territory Management",
     company: "Sunda Invest Limited",
-    period: "Sep 2019 – Apr 2021",
-    location: "Western Region, Ghana",
+    period: "Mar 2018 – Apr 2021",
+    location: "Accra & Western Region, Ghana",
     description:
-      "Promoted out of Accra into a second line of management, supervising the Cape Coast, Takoradi, Tarkwa and Prestea managers rather than salesmen directly — their combined distributor targets of about GHS 7 million became my secondary target as supervisor, on top of keeping the analytics role running and reporting from the new region. Hitting it meant analysing team, sales, distributor and customer/supermarket-audit performance across the four territories to separate gaps that were structural from gaps that were personal, then working them through the managers who held each portfolio rather than around them. Also worked with the marketing team on market-collected pricing data to help set consumer, retail and ex-factory prices across the range.",
-  },
-  {
-    role: "Territory Sales Manager",
-    company: "Sunda Invest Limited",
-    period: "Mar 2018 – Aug 2019",
-    location: "Greater Accra, Ghana",
-    description:
-      "Directly managed five key distributor accounts — twenty van sales teams reaching 200+ wholesaler and sub-distributor accounts, 7 supermarkets and 3 online/modern-trade vendors, with every order from outside the five routed to whichever distributor covered that Accra location — against a combined target of GHS 3.2 million a month. My reporting work got me pulled into Sunda's analytics team alongside the TM role, and I moved to working remotely from there: ran the backoffice tracking each distributor's credit exposure and payment status, and built the daily Excel and Power BI reporting the distributors and their van teams worked to — month-to-date volume, achievement by product category, and the commission each contract was on track to pay. The weakest of the five was up 23.75% by my final month on it, and the top distributor earned 18.61% more in commission by buying against category targets it had previously ignored.",
+      "Directly managed five key distributor accounts — twenty van sales teams reaching 200+ wholesaler and sub-distributor accounts, 7 supermarkets and 3 online/modern-trade vendors, with every order from outside the five routed to whichever distributor covered that Accra location — against a combined target of GHS 3.2 million a month. My reporting work got me pulled into Sunda's analytics team, and I moved to working remotely from there: ran the backoffice tracking each distributor's credit exposure and payment status, and built the daily Excel and Power BI reporting the distributors and their van teams worked to — month-to-date volume, achievement by product category, and the commission each contract was on track to pay. The weakest of the five was up 23.75% by my final month on it, and the top distributor earned 18.61% more in commission by buying against category targets it had previously ignored. Promoted into a second line of management, supervising the Cape Coast, Takoradi, Tarkwa and Prestea managers rather than salesmen directly — their combined distributor targets of about GHS 7 million became my secondary target, on top of keeping the analytics role running and reporting from the new region. Hitting it meant analysing team, sales, distributor and customer/supermarket-audit performance across the four territories to separate gaps that were structural from gaps that were personal, then working them through the managers who held each portfolio rather than around them. Also worked with the marketing team on market-collected pricing data to help set consumer, retail and ex-factory prices across the range.",
   },
   {
     role: "Business Development & Training Coordinator",
