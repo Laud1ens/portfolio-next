@@ -3,6 +3,10 @@ export interface Stat {
   suffix?: string;
   decimals?: number;
   label: string;
+  /** Plain-English line under the label: what the number means, not just
+   *  what it's called. Added 9 Oct 2026 so a bare 0.887 isn't left to speak
+   *  for itself. */
+  meaning?: string;
 }
 
 export interface LinkCta {
@@ -49,37 +53,49 @@ export const CV_REQUEST_MAILTO =
   encodeURIComponent(CV_REQUEST_BODY);
 
 /**
- * The hero leads with a shipped system rather than a description of skills.
- *
- * The previous version opened with "forecasting, optimisation and deep
- * learning, built to be acted on", which is a claim about a person. This opens
- * with a thing that exists, the problem it was pointed at, what it runs on and
- * what it costs to get wrong. A reader can verify all of it. `bridge` then
- * hands off to the research work so one production build does not crowd out
- * six pieces of evidence that this is a data scientist and not a web developer.
+ * Changed 9 Oct 2026, per Laud: the hero now leads with him, his journey and
+ * what that means for a business reading this cold, rather than opening on
+ * the staffing portal. `lede` and `bridge` are now two full paragraphs of
+ * equal visual weight (bridge dropped its blockquote styling in hero.tsx),
+ * not a headline paragraph plus a one-line hand-off. Every claim in both is
+ * still something the CV and the projects below can back up: the GHS 3.2M
+ * target, the MSc, the portal. Nothing here is a number invented for the
+ * pitch.
  */
 export const LINKEDIN_URL = "https://www.linkedin.com/in/laud-asante-938382103/";
 
 export const hero = {
   kicker: "Laud Asante · Data Science & AI · Hull, UK",
-  headline: "A recruitment agency's whole operation, ",
-  headlineEmphasis: "in one login",
-  // The client is not named here, and will not be until they have agreed to it.
-  // Naming a company, its city and its internal compliance process on a public
-  // page is their disclosure to make, not mine. The engineering numbers below
-  // are my own work product and stay.
-  lede: "A UK recruitment agency places temporary workers into warehouse, care and hospitality jobs, and the rules deciding who could take which shift lived in people's heads. I built the portal that writes them down, and shipped it: TypeScript and Postgres on Railway, 47 API routes, 445 automated tests. The rule that keeps a student inside their visa hour cap carries 35 of those tests on its own, because a wrong answer there costs somebody their right to remain in the country.",
+  headline: "I spent six years being the person a forecast happened to, ",
+  headlineEmphasis: "now I build the forecast",
+  lede: "I spent six years inside the forecast rather than reading about it: setting prices, carrying a GHS 3.2 million monthly target across five distributor accounts, and finding out at 7am whether a gap in the numbers was demand, distribution, or the depot recording it wrong. FMCG manufacturing and distribution teach you what a model has to survive once it leaves the notebook, because the people downstream of a wrong number are real, and the consequences land on their shift, their stock, or their pay. I added an MSc in Artificial Intelligence and Data Science at the University of Hull to that experience so I could build the models myself instead of only absorbing what they produced. What I bring to a technical problem is six years of knowing what a number is going to do to the person who receives it, not just whether the number is accurate. That combination, commercial grounding first and the technical build second, is what the work below is evidence of.",
   bridge:
-    "That is the build that had to survive contact with real people. The projects below are the research behind it: forecasting, anomaly detection and deep learning, including the two where the honest finding was that I was wrong.",
+    "For a business, that means I can take a forecasting, pricing or operational problem from a vague question through to a shipped, tested system, not a notebook that ran once. I build end to end: data pipelines, demand forecasting and ML models in Python and SQL, dashboards a non-technical stakeholder can actually read, and production systems with the tests and audit trail a regulated or customer-facing environment needs. I am also honest about what a model does and does not know, which the projects below show directly: two of them are published corrections to my own earlier work, because a result that survives being checked is worth more than one that only survives being presented. If a business needs someone who can own a number from the raw data through to the decision it drives, and explain either one in the room, that is the work I do. The staffing portal below is the clearest single example: a production system a UK recruitment agency runs its real operation on, not a demo.",
   ctas: [
     { label: "Request CV ✉", href: CV_REQUEST_MAILTO, primary: true },
     { label: "GitHub ↗", href: "https://github.com/Laud1ens" },
     { label: "LinkedIn ↗", href: LINKEDIN_URL, status: "in-progress" },
   ] as LinkCta[],
   stats: [
-    { value: 0.887, decimals: 3, label: "R², county-level case forecast" },
-    { value: 94.7, suffix: "%", decimals: 1, label: "Precision, machine-failure detection" },
-    { value: 0.974, decimals: 3, label: "AUC-ROC, sarcasm detection" },
+    {
+      value: 0.887,
+      decimals: 3,
+      label: "R², county-level case forecast",
+      meaning: "Nine model configurations compared head to head; what the data could actually support, not what looked best on paper.",
+    },
+    {
+      value: 94.7,
+      suffix: "%",
+      decimals: 1,
+      label: "Precision, machine-failure detection",
+      meaning: "Of the machines the model flagged, 19 in 20 were really about to fail, not a false alarm.",
+    },
+    {
+      value: 0.974,
+      decimals: 3,
+      label: "AUC-ROC, sarcasm detection",
+      meaning: "How well it separated sarcasm on data it was trained on, before testing found the limit of that number.",
+    },
   ] as Stat[],
 };
 

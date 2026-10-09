@@ -21,9 +21,7 @@ export function Hero() {
           <em className="text-rust not-italic md:italic">{hero.headlineEmphasis}</em>.
         </h1>
         <p className="mb-4 max-w-xl text-[1.02rem] leading-relaxed text-brown">{hero.lede}</p>
-        <p className="mb-7 max-w-xl border-l-2 border-rust/30 pl-4 text-[0.92rem] leading-relaxed text-brown/80">
-          {hero.bridge}
-        </p>
+        <p className="mb-7 max-w-xl text-[1.02rem] leading-relaxed text-brown">{hero.bridge}</p>
         <div className="mb-8 flex flex-wrap items-center gap-3">
           {hero.ctas.map((cta) => (
             <span key={cta.href} className="inline-flex items-center gap-2">

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Stat } from "@/lib/content";
 
-export function AnimatedStat({ value, suffix = "", decimals = 0, label }: Stat) {
+export function AnimatedStat({ value, suffix = "", decimals = 0, label, meaning }: Stat) {
   const [display, setDisplay] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const started = useRef(false);
@@ -39,6 +39,9 @@ export function AnimatedStat({ value, suffix = "", decimals = 0, label }: Stat) 
         {suffix}
       </div>
       <div className="mt-1 font-label text-xs uppercase tracking-wide text-brown">{label}</div>
+      {meaning && (
+        <div className="mt-1.5 text-[0.76rem] leading-snug text-brown/70">{meaning}</div>
+      )}
     </div>
   );
 }
